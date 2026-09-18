@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>📊 Conciergerie – V3</title>
+    <title>📊 Conciergerie – V4</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         /* ===== VARIABLES ===== */
         :root {
             --bg-body: #f4f6fa;
             --bg-card: #ffffff;
-            --bg-panel: #ffffff;
             --text-primary: #1e293b;
             --text-secondary: #475569;
             --text-muted: #94a3b8;
@@ -29,11 +28,9 @@
             --card-purple: #8b5cf6;
             --card-teal: #14b8a6;
         }
-
         body.dark {
             --bg-body: #0f172a;
             --bg-card: #1e293b;
-            --bg-panel: #1e293b;
             --text-primary: #f1f5f9;
             --text-secondary: #cbd5e1;
             --text-muted: #64748b;
@@ -46,305 +43,141 @@
             --badge-bg: #334155;
             --badge-text: #f1f5f9;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, system-ui, sans-serif; }
         body {
-            background: var(--bg-body);
-            padding: 16px;
-            color: var(--text-primary);
-            transition: background 0.3s, color 0.3s;
-            min-height: 100vh;
+            background: var(--bg-body); padding: 16px; color: var(--text-primary);
+            transition: background 0.3s, color 0.3s; min-height: 100vh;
         }
-
         .container { max-width: 1400px; margin: 0 auto; }
 
         /* ===== LOGIN ===== */
-        #loginScreen {
-            display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; background: var(--bg-body);
-        }
-        #loginScreen .login-box {
-            background: var(--bg-card); border-radius: 20px; padding: 32px 40px;
-            box-shadow: var(--shadow); max-width: 450px; width: 100%;
-        }
+        #loginScreen { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: var(--bg-body); }
+        #loginScreen .login-box { background: var(--bg-card); border-radius: 20px; padding: 32px 40px; box-shadow: var(--shadow); max-width: 450px; width: 100%; }
         #loginScreen .login-box h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
         #loginScreen .login-box p { color: var(--text-muted); margin-bottom: 20px; font-size: 14px; }
-        #loginScreen .login-box label {
-            font-weight: 600; font-size: 13px; display: block; margin-top: 12px; margin-bottom: 4px;
-        }
-        #loginScreen .login-box input, #loginScreen .login-box select {
-            width: 100%; padding: 10px 14px; border: 1px solid var(--input-border);
-            border-radius: 12px; background: var(--input-bg); color: var(--text-primary);
-            font-size: 14px; transition: 0.2s;
-        }
-        #loginScreen .login-box input:focus {
-            border-color: var(--card-blue); outline: none;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
-        #loginScreen .login-box .btn {
-            width: 100%; margin-top: 16px; padding: 12px; border: none; border-radius: 40px;
-            font-weight: 700; font-size: 15px; cursor: pointer; transition: 0.2s;
-            background: #1e293b; color: white;
-        }
+        #loginScreen .login-box label { font-weight: 600; font-size: 13px; display: block; margin-top: 12px; margin-bottom: 4px; }
+        #loginScreen .login-box input { width: 100%; padding: 10px 14px; border: 1px solid var(--input-border); border-radius: 12px; background: var(--input-bg); color: var(--text-primary); font-size: 14px; transition: 0.2s; }
+        #loginScreen .login-box input:focus { border-color: var(--card-blue); outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+        #loginScreen .login-box .btn { width: 100%; margin-top: 16px; padding: 12px; border: none; border-radius: 40px; font-weight: 700; font-size: 15px; cursor: pointer; transition: 0.2s; background: #1e293b; color: white; }
         body.dark #loginScreen .login-box .btn { background: #3b82f6; }
         #loginScreen .login-box .btn:hover { transform: scale(1.02); }
-
-        .login-hint {
-            margin-top: 14px; font-size: 11px; color: var(--text-muted);
-            background: var(--bg-rec); border-radius: 10px; padding: 8px 12px;
-            text-align: center; line-height: 1.5;
-        }
+        .login-hint { margin-top: 14px; font-size: 11px; color: var(--text-muted); background: var(--bg-rec); border-radius: 10px; padding: 8px 12px; text-align: center; line-height: 1.5; }
         .login-hint strong { color: var(--card-purple); }
-
-        #loginScreen .login-error {
-            color: var(--card-red); font-size: 13px; margin-top: 10px;
-            text-align: center; display: none;
-        }
-        #loginScreen .login-success {
-            color: var(--card-green); font-size: 13px; margin-top: 10px;
-            text-align: center; display: none;
-        }
-
+        #loginScreen .login-error { color: var(--card-red); font-size: 13px; margin-top: 10px; text-align: center; display: none; }
+        #loginScreen .login-success { color: var(--card-green); font-size: 13px; margin-top: 10px; text-align: center; display: none; }
         .auth-toggle { text-align: center; margin-top: 14px; font-size: 14px; color: var(--text-muted); }
         .auth-toggle a { color: var(--card-blue); cursor: pointer; font-weight: 600; text-decoration: none; }
         .auth-toggle a:hover { text-decoration: underline; }
-
         .hidden { display: none !important; }
         #mainApp { display: none; }
 
         /* ===== HEADER ===== */
-        .header {
-            display: flex; justify-content: space-between; align-items: center;
-            flex-wrap: wrap; gap: 12px; margin-bottom: 20px;
-        }
+        .header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
         .header .left { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .header h1 { font-size: 22px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-        .header h1 span {
-            background: var(--badge-bg); padding: 4px 12px; border-radius: 40px;
-            font-size: 11px; font-weight: 500; color: var(--badge-text);
-        }
-        .header .user-info {
-            font-size: 13px; color: var(--text-secondary); background: var(--bg-rec);
-            padding: 4px 16px; border-radius: 40px; font-weight: 600; cursor: pointer; transition: 0.2s;
-        }
+        .header h1 span { background: var(--badge-bg); padding: 4px 12px; border-radius: 40px; font-size: 11px; font-weight: 500; color: var(--badge-text); }
+        .header .user-info { font-size: 13px; color: var(--text-secondary); background: var(--bg-rec); padding: 4px 16px; border-radius: 40px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .header .user-info:hover { background: var(--card-blue); color: white; }
-        .header .user-info .badge {
-            background: var(--card-purple); color: white; padding: 2px 10px;
-            border-radius: 40px; font-size: 10px; font-weight: 700; margin-left: 6px;
-        }
+        .header .user-info .badge { background: var(--card-purple); color: white; padding: 2px 10px; border-radius: 40px; font-size: 10px; font-weight: 700; margin-left: 6px; }
         .header .actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
-        .badge-mois {
-            background: #0f172a; color: white; padding: 5px 14px; border-radius: 40px;
-            font-weight: 600; font-size: 12px;
-        }
+        .badge-mois { background: #0f172a; color: white; padding: 5px 14px; border-radius: 40px; font-weight: 600; font-size: 12px; }
         body.dark .badge-mois { background: #334155; }
-        .btn-icon {
-            background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 40px;
-            padding: 5px 12px; font-size: 15px; cursor: pointer; transition: 0.2s; color: var(--text-primary);
-        }
+        .btn-icon { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 40px; padding: 5px 12px; font-size: 15px; cursor: pointer; transition: 0.2s; color: var(--text-primary); }
         .btn-icon:hover { transform: scale(1.05); }
-        .btn-logout {
-            background: var(--card-red); color: white; border: none; border-radius: 40px;
-            padding: 5px 16px; font-weight: 600; font-size: 12px; cursor: pointer; transition: 0.2s;
-        }
+        .btn-logout { background: var(--card-red); color: white; border: none; border-radius: 40px; padding: 5px 16px; font-weight: 600; font-size: 12px; cursor: pointer; transition: 0.2s; }
         .btn-logout:hover { opacity: 0.8; }
 
         /* ===== ALERTE ===== */
-        .alert-bar {
-            padding: 8px 16px; border-radius: 12px; margin-bottom: 16px;
-            display: none; font-weight: 600; font-size: 13px;
-        }
+        .alert-bar { padding: 8px 16px; border-radius: 12px; margin-bottom: 16px; display: none; font-weight: 600; font-size: 13px; }
         .alert-bar.show { display: block; }
         .alert-bar.red { background: #ef4444; color: white; }
         .alert-bar.orange { background: #f59e0b; color: #0f172a; }
         .alert-bar.green { background: #10b981; color: white; }
 
         /* ===== MODE CALCUL ===== */
-        .mode-bar {
-            display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-            background: var(--bg-card); border-radius: 14px; padding: 10px 16px;
-            box-shadow: var(--shadow); margin-bottom: 16px;
-        }
+        .mode-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--bg-card); border-radius: 14px; padding: 10px 16px; box-shadow: var(--shadow); margin-bottom: 16px; }
         .mode-bar .mode-label { font-size: 12px; font-weight: 700; color: var(--text-secondary); }
         .segmented { display: flex; background: var(--bg-rec); border-radius: 40px; padding: 3px; gap: 3px; }
-        .seg-btn {
-            border: none; background: transparent; padding: 7px 16px; border-radius: 40px;
-            font-size: 12px; font-weight: 600; cursor: pointer; color: var(--text-secondary); transition: 0.2s;
-        }
+        .seg-btn { border: none; background: transparent; padding: 7px 16px; border-radius: 40px; font-size: 12px; font-weight: 600; cursor: pointer; color: var(--text-secondary); transition: 0.2s; }
         .seg-btn.active { background: var(--card-blue); color: white; box-shadow: 0 2px 8px rgba(59,130,246,.35); }
         .mode-hint { font-size: 11px; color: var(--text-muted); font-style: italic; }
 
         /* ===== CARTES ===== */
-        .grid-cards {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 10px; margin-bottom: 16px;
-        }
-        .card {
-            background: var(--bg-card); border-radius: 14px; padding: 12px 14px 14px;
-            box-shadow: var(--shadow); border-left: 4px solid var(--border-card); transition: 0.2s;
-        }
-        .card .label {
-            font-size: 10px; font-weight: 500; color: var(--text-muted); text-transform: uppercase;
-            letter-spacing: 0.3px; margin-bottom: 3px; display: flex; align-items: center; gap: 4px;
-        }
+        .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 16px; }
+        .card { background: var(--bg-card); border-radius: 14px; padding: 12px 14px 14px; box-shadow: var(--shadow); border-left: 4px solid var(--border-card); transition: 0.2s; }
+        .card .label { font-size: 10px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 3px; display: flex; align-items: center; gap: 4px; }
         .card .value { font-size: 22px; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
         .card .sub { font-size: 11px; color: var(--text-secondary); margin-top: 3px; }
-        .card .progress-bar {
-            margin-top: 8px; height: 5px; background: var(--border-light);
-            border-radius: 20px; overflow: hidden;
-        }
-        .card .progress-bar .fill {
-            height: 100%; border-radius: 20px; background: var(--card-blue); transition: width 0.4s ease;
-        }
-        .card.green { border-left-color: var(--card-green); }
-        .card.green .value { color: var(--card-green); }
-        .card.orange { border-left-color: var(--card-orange); }
-        .card.orange .value { color: var(--card-orange); }
-        .card.red { border-left-color: var(--card-red); }
-        .card.red .value { color: var(--card-red); }
+        .card .progress-bar { margin-top: 8px; height: 5px; background: var(--border-light); border-radius: 20px; overflow: hidden; }
+        .card .progress-bar .fill { height: 100%; border-radius: 20px; background: var(--card-blue); transition: width 0.4s ease; }
+        .card.green { border-left-color: var(--card-green); } .card.green .value { color: var(--card-green); }
+        .card.orange { border-left-color: var(--card-orange); } .card.orange .value { color: var(--card-orange); }
+        .card.red { border-left-color: var(--card-red); } .card.red .value { color: var(--card-red); }
         .card.blue { border-left-color: var(--card-blue); }
-        .card.purple { border-left-color: var(--card-purple); }
-        .card.purple .value { color: var(--card-purple); }
-        .card.teal { border-left-color: var(--card-teal); }
-        .card.teal .value { color: var(--card-teal); }
+        .card.purple { border-left-color: var(--card-purple); } .card.purple .value { color: var(--card-purple); }
+        .card.teal { border-left-color: var(--card-teal); } .card.teal .value { color: var(--card-teal); }
 
         /* ===== GAINS ===== */
-        .gains-box {
-            background: linear-gradient(135deg, #0f172a, #1e293b); color: white;
-            border-radius: 14px; padding: 14px 18px; display: flex; flex-wrap: wrap;
-            align-items: center; justify-content: space-between; margin-bottom: 16px; gap: 8px;
-        }
+        .gains-box { background: linear-gradient(135deg, #0f172a, #1e293b); color: white; border-radius: 14px; padding: 14px 18px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-bottom: 16px; gap: 8px; }
         body.dark .gains-box { background: linear-gradient(135deg, #1e293b, #334155); }
         .gains-box .gain-item { display: flex; flex-direction: column; }
         .gains-box .gain-item .label { font-size: 10px; opacity: 0.7; font-weight: 400; }
         .gains-box .gain-item .value { font-size: 18px; font-weight: 700; }
         .gains-box .gain-item .value small { font-size: 11px; font-weight: 400; opacity: 0.8; }
-        .gains-box .badge-supp {
-            background: #fbbf24; color: #0f172a; padding: 3px 12px;
-            border-radius: 40px; font-weight: 700; font-size: 12px;
-        }
+        .gains-box .badge-supp { background: #fbbf24; color: #0f172a; padding: 3px 12px; border-radius: 40px; font-weight: 700; font-size: 12px; }
         .gains-box .gain-progress { flex-basis: 100%; margin-top: 3px; }
-        .gains-box .gain-progress .bar-bg {
-            height: 5px; background: rgba(255, 255, 255, 0.15); border-radius: 20px; overflow: hidden;
-        }
-        .gains-box .gain-progress .bar-bg .bar-fill {
-            height: 100%; border-radius: 20px; background: #fbbf24; transition: width 0.4s ease;
-        }
+        .gains-box .gain-progress .bar-bg { height: 5px; background: rgba(255, 255, 255, 0.15); border-radius: 20px; overflow: hidden; }
+        .gains-box .gain-progress .bar-bg .bar-fill { height: 100%; border-radius: 20px; background: #fbbf24; transition: width 0.4s ease; }
 
         /* ===== EMPLOI DU TEMPS ===== */
-        .planning-section {
-            background: var(--bg-card); border-radius: 14px; padding: 14px 16px 16px;
-            box-shadow: var(--shadow); margin-bottom: 16px;
-        }
-        .planning-section h3 {
-            font-size: 14px; font-weight: 600; margin-bottom: 10px;
-            display: flex; align-items: center; gap: 6px;
-        }
-        .presence-bar {
-            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
-            gap: 10px; background: var(--bg-rec); border-radius: 12px;
-            padding: 10px 14px; margin-bottom: 12px;
-        }
+        .planning-section { background: var(--bg-card); border-radius: 14px; padding: 14px 16px 16px; box-shadow: var(--shadow); margin-bottom: 16px; }
+        .planning-section h3 { font-size: 14px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+        .presence-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; background: var(--bg-rec); border-radius: 12px; padding: 10px 14px; margin-bottom: 12px; }
         .pb-left { display: flex; flex-direction: column; gap: 2px; }
-        .pb-date {
-            font-size: 10px; font-weight: 700; text-transform: uppercase;
-            letter-spacing: .5px; color: var(--text-muted);
-        }
+        .pb-date { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); }
         .pb-text { font-size: 13px; font-weight: 600; }
         .pb-shift { font-size: 11px; color: var(--text-secondary); }
         .pb-right { display: flex; gap: 6px; flex-wrap: wrap; }
-        .pb-btn {
-            border: 1px solid var(--border-light); background: var(--bg-card);
-            color: var(--text-primary); padding: 7px 14px; border-radius: 40px;
-            font-size: 12px; font-weight: 600; cursor: pointer; transition: .2s;
-        }
+        .pb-btn { border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-primary); padding: 7px 14px; border-radius: 40px; font-size: 12px; font-weight: 600; cursor: pointer; transition: .2s; }
         .pb-btn:hover { transform: translateY(-1px); }
         .pb-ok.active { background: var(--card-green); color: #fff; border-color: var(--card-green); }
         .pb-no.active { background: var(--card-red); color: #fff; border-color: var(--card-red); }
         .pb-shift-btn { background: var(--card-blue); color: #fff; border-color: var(--card-blue); }
-
-        .planning-nav {
-            display: flex; justify-content: space-between; align-items: center;
-            gap: 10px; margin-bottom: 10px; flex-wrap: wrap;
-        }
-        .planning-nav .nav-btn {
-            border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-primary);
-            padding: 6px 14px; border-radius: 40px; font-size: 12px; font-weight: 600; cursor: pointer; transition: .2s;
-        }
+        .planning-nav { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+        .planning-nav .nav-btn { border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-primary); padding: 6px 14px; border-radius: 40px; font-size: 12px; font-weight: 600; cursor: pointer; transition: .2s; }
         .planning-nav .nav-btn:hover { background: var(--card-blue); color: #fff; border-color: var(--card-blue); }
         .planning-nav .titre { font-size: 13px; font-weight: 700; text-align: center; flex: 1; }
-        .planning-nav .today-btn {
-            background: var(--card-orange); color: #0f172a; border: none;
-            padding: 6px 14px; border-radius: 40px; font-size: 12px; font-weight: 700; cursor: pointer;
-        }
-
+        .planning-nav .today-btn { background: var(--card-orange); color: #0f172a; border: none; padding: 6px 14px; border-radius: 40px; font-size: 12px; font-weight: 700; cursor: pointer; }
         .planning-week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
         @media (max-width: 820px) { .planning-week { grid-template-columns: repeat(2, 1fr); } }
-
-        .day-cell {
-            background: var(--bg-rec); border: 2px solid var(--border-light); border-radius: 12px;
-            padding: 8px 10px; cursor: pointer; transition: .2s; min-height: 108px;
-            display: flex; flex-direction: column; gap: 5px; position: relative;
-        }
+        .day-cell { background: var(--bg-rec); border: 2px solid var(--border-light); border-radius: 12px; padding: 8px 10px; cursor: pointer; transition: .2s; min-height: 108px; display: flex; flex-direction: column; gap: 5px; position: relative; }
         .day-cell:hover { border-color: var(--card-blue); transform: translateY(-2px); }
         .day-cell.today { border-color: var(--card-orange); box-shadow: 0 0 0 3px rgba(245,158,11,.2); }
-        .day-cell.today::after {
-            content: "Aujourd'hui"; position: absolute; top: -9px; right: 8px;
-            background: var(--card-orange); color: #0f172a; font-size: 8px; font-weight: 800;
-            padding: 2px 7px; border-radius: 20px; letter-spacing: .4px;
-        }
+        .day-cell.today::after { content: "Aujourd'hui"; position: absolute; top: -9px; right: 8px; background: var(--card-orange); color: #0f172a; font-size: 8px; font-weight: 800; padding: 2px 7px; border-radius: 20px; letter-spacing: .4px; }
         .day-cell.past { opacity: .72; }
         .day-cell.weekend { background: color-mix(in srgb, var(--bg-rec) 85%, var(--card-purple) 15%); }
-
         .dc-head { display: flex; justify-content: space-between; align-items: baseline; }
-        .dc-head .dow {
-            font-size: 10px; font-weight: 800; text-transform: uppercase;
-            color: var(--text-muted); letter-spacing: .6px;
-        }
+        .dc-head .dow { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); letter-spacing: .6px; }
         .dc-head .dnum { font-size: 17px; font-weight: 700; }
         .dc-body { flex: 1; display: flex; flex-direction: column; gap: 3px; }
         .dc-foot { display: flex; gap: 3px; flex-wrap: wrap; }
         .shift-time { font-size: 12px; font-weight: 700; }
         .shift-hours { font-size: 10px; color: var(--text-secondary); }
         .shift-empty { font-size: 11px; color: var(--text-muted); font-style: italic; }
-        .tag {
-            font-size: 9px; padding: 2px 8px; border-radius: 40px;
-            font-weight: 700; display: inline-block; width: fit-content;
-        }
+        .tag { font-size: 9px; padding: 2px 8px; border-radius: 40px; font-weight: 700; display: inline-block; width: fit-content; }
         .tag.travail { background: rgba(16,185,129,.15); color: #10b981; }
         .tag.repos { background: rgba(148,163,184,.2); color: var(--text-muted); }
         .tag.conge { background: rgba(139,92,246,.15); color: #8b5cf6; }
         .tag.absent { background: rgba(239,68,68,.15); color: #ef4444; }
         .tag.present { background: rgba(16,185,129,.2); color: #10b981; }
-
-        .planning-resume {
-            margin-top: 10px; font-size: 12px; color: var(--text-secondary);
-            background: var(--bg-rec); border-radius: 10px; padding: 8px 12px;
-        }
+        .planning-resume { margin-top: 10px; font-size: 12px; color: var(--text-secondary); background: var(--bg-rec); border-radius: 10px; padding: 8px 12px; }
 
         /* ===== RECOMMANDATIONS ===== */
-        .recommandations {
-            background: var(--bg-card); border-radius: 14px; padding: 14px 16px 16px;
-            box-shadow: var(--shadow); margin-bottom: 16px;
-        }
-        .recommandations .top-row {
-            display: flex; flex-wrap: wrap; justify-content: space-between;
-            align-items: center; gap: 10px; margin-bottom: 10px;
-        }
-        .recommandations .top-row h3 {
-            font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px;
-        }
+        .recommandations { background: var(--bg-card); border-radius: 14px; padding: 14px 16px 16px; box-shadow: var(--shadow); margin-bottom: 16px; }
+        .recommandations .top-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .recommandations .top-row h3 { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
         .recommandations .top-row .obj-input { display: flex; align-items: center; gap: 5px; font-size: 12px; }
-        .recommandations .top-row .obj-input input {
-            width: 48px; padding: 3px 6px; border-radius: 8px; border: 1px solid var(--input-border);
-            background: var(--input-bg); color: var(--text-primary); font-weight: 600; text-align: center;
-        }
+        .recommandations .top-row .obj-input input { width: 48px; padding: 3px 6px; border-radius: 8px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text-primary); font-weight: 600; text-align: center; }
         .rec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
         .rec-item { background: var(--bg-rec); border-radius: 10px; padding: 10px 12px; }
         .rec-item .label { font-size: 10px; color: var(--text-muted); font-weight: 500; }
@@ -353,100 +186,53 @@
         .rec-item.urgent { border-left: 4px solid var(--card-red); }
         .rec-item.warning { border-left: 4px solid var(--card-orange); }
         .rec-item.ok { border-left: 4px solid var(--card-green); }
-
-        .badge-perf {
-            display: inline-block; padding: 2px 10px; border-radius: 40px;
-            font-weight: 700; font-size: 11px; margin-left: 4px;
-        }
+        .badge-perf { display: inline-block; padding: 2px 10px; border-radius: 40px; font-weight: 700; font-size: 11px; margin-left: 4px; }
         .badge-perf.expert { background: #fbbf24; color: #0f172a; }
         .badge-perf.pro { background: var(--card-blue); color: white; }
         .badge-perf.apprenti { background: var(--card-orange); color: white; }
         .badge-perf.debutant { background: var(--text-muted); color: white; }
 
         /* ===== CLASSEMENT ===== */
-        .classement-section {
-            background: var(--bg-card); border-radius: 14px; padding: 14px 16px 16px;
-            box-shadow: var(--shadow); margin-bottom: 16px;
-        }
-        .classement-section h3 {
-            font-size: 14px; font-weight: 600; margin-bottom: 10px;
-            display: flex; align-items: center; gap: 6px;
-        }
-        .team-summary {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 8px; margin-bottom: 12px;
-        }
-        .ts-item {
-            background: linear-gradient(135deg, #1e293b, #334155); color: #fff;
-            border-radius: 10px; padding: 8px 12px; display: flex; flex-direction: column; gap: 1px;
-        }
+        .classement-section { background: var(--bg-card); border-radius: 14px; padding: 14px 16px 16px; box-shadow: var(--shadow); margin-bottom: 16px; }
+        .classement-section h3 { font-size: 14px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+        .team-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-bottom: 12px; }
+        .ts-item { background: linear-gradient(135deg, #1e293b, #334155); color: #fff; border-radius: 10px; padding: 8px 12px; display: flex; flex-direction: column; gap: 1px; }
         .ts-item .ts-label { font-size: 9px; opacity: .75; text-transform: uppercase; letter-spacing: .4px; }
         .ts-item .ts-value { font-size: 16px; font-weight: 700; }
-
         .classement-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         @media (max-width: 600px) { .classement-grid { grid-template-columns: 1fr; } }
         .classement-box { background: var(--bg-rec); border-radius: 10px; padding: 12px 14px; }
         .classement-box h4 { font-size: 12px; font-weight: 600; margin-bottom: 8px; color: var(--text-secondary); }
-        .classement-box .rank-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 4px 0; border-bottom: 1px solid var(--border-light); font-size: 12px;
-        }
+        .classement-box .rank-item { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid var(--border-light); font-size: 12px; }
         .classement-box .rank-item .rank { font-weight: 700; color: var(--text-muted); min-width: 22px; }
         .classement-box .rank-item .name { flex: 1; margin-left: 6px; }
         .classement-box .rank-item .value { font-weight: 600; }
-        .classement-box .rank-item.you {
-            background: var(--card-blue); color: white; padding: 4px 8px;
-            border-radius: 6px; border-bottom: none;
-        }
+        .classement-box .rank-item.you { background: var(--card-blue); color: white; padding: 4px 8px; border-radius: 6px; border-bottom: none; }
         .classement-box .rank-item.you .rank,
         .classement-box .rank-item.you .name,
         .classement-box .rank-item.you .value { color: white; }
 
         /* ===== ADMIN ===== */
-        .admin-panel {
-            background: var(--bg-card); border-radius: 14px; padding: 14px 16px 16px;
-            box-shadow: var(--shadow); margin-bottom: 16px;
-            border-left: 4px solid var(--card-purple); display: none;
-        }
+        .admin-panel { background: var(--bg-card); border-radius: 14px; padding: 14px 16px 16px; box-shadow: var(--shadow); margin-bottom: 16px; border-left: 4px solid var(--card-purple); display: none; }
         .admin-panel.visible { display: block; }
-        .admin-panel h3 {
-            font-size: 14px; font-weight: 600; margin-bottom: 10px;
-            display: flex; align-items: center; gap: 6px;
-        }
-        .admin-panel .admin-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;
-        }
-        .admin-panel .admin-user {
-            background: var(--bg-rec); border-radius: 10px; padding: 10px 12px;
-            display: flex; justify-content: space-between; align-items: center; gap: 8px;
-        }
+        .admin-panel h3 { font-size: 14px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+        .admin-panel .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+        .admin-panel .admin-user { background: var(--bg-rec); border-radius: 10px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
         .admin-panel .admin-user .info { display: flex; flex-direction: column; }
         .admin-panel .admin-user .info .name { font-weight: 600; font-size: 13px; }
         .admin-panel .admin-user .info .status { font-size: 10px; color: var(--text-muted); }
         .admin-panel .admin-user .info .code-hint { font-size: 9px; color: var(--text-muted); opacity: .75; }
         .admin-panel .admin-user .actions { display: flex; gap: 4px; flex-wrap: wrap; }
-        .admin-panel .admin-user .actions .btn-sm {
-            padding: 3px 10px; font-size: 10px; border-radius: 40px; border: none;
-            cursor: pointer; font-weight: 600; transition: 0.2s;
-        }
+        .admin-panel .admin-user .actions .btn-sm { padding: 3px 10px; font-size: 10px; border-radius: 40px; border: none; cursor: pointer; font-weight: 600; transition: 0.2s; }
         .admin-panel .admin-user .actions .btn-sm:hover { opacity: 0.8; }
         .btn-validate { background: var(--card-green); color: white; }
         .btn-promote { background: var(--card-purple); color: white; }
         .btn-delete { background: var(--card-red); color: white; }
         .btn-toggle-nc { background: var(--card-orange); color: #0f172a; }
-
-        .admin-add {
-            margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border-light);
-        }
+        .admin-add { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border-light); }
         .admin-add .row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-        .admin-add input[type=text], .admin-add input[type=password] {
-            padding: 7px 10px; border: 1px solid var(--input-border); border-radius: 8px;
-            background: var(--input-bg); color: var(--text-primary); font-size: 12px; flex: 1; min-width: 90px;
-        }
-        .admin-add .chk {
-            display: flex; align-items: center; gap: 6px; font-size: 11px;
-            color: var(--text-secondary); font-weight: 600; margin-top: 8px;
-        }
+        .admin-add input[type=text], .admin-add input[type=password] { padding: 7px 10px; border: 1px solid var(--input-border); border-radius: 8px; background: var(--input-bg); color: var(--text-primary); font-size: 12px; flex: 1; min-width: 90px; }
+        .admin-add .chk { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-secondary); font-weight: 600; margin-top: 8px; }
         .admin-add .chk input { width: auto; }
         .admin-hint { font-size: 10px; color: var(--text-muted); text-align: center; margin-top: 8px; opacity: 0.6; }
 
@@ -458,43 +244,20 @@
         .sync-status .dot.red { background: var(--card-red); }
 
         /* ===== MODALS ===== */
-        .modal-overlay {
-            display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.55);
-            z-index: 1000; justify-content: center; align-items: center; padding: 14px;
-        }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.55); z-index: 1000; justify-content: center; align-items: center; padding: 14px; }
         .modal-overlay.active { display: flex; }
-        .modal-box {
-            background: var(--bg-card); border-radius: 20px; padding: 26px 30px;
-            max-width: 520px; width: 100%; max-height: 92vh; overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
-        }
+        .modal-box { background: var(--bg-card); border-radius: 20px; padding: 26px 30px; max-width: 520px; width: 100%; max-height: 92vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35); }
         .modal-box h2 { font-size: 21px; font-weight: 700; margin-bottom: 4px; }
         .modal-box p { color: var(--text-muted); margin-bottom: 16px; font-size: 13px; }
-        .modal-box label {
-            display: block; font-weight: 600; font-size: 12px;
-            margin-top: 12px; margin-bottom: 4px;
-        }
-        .modal-box input, .modal-box select, .modal-box textarea {
-            width: 100%; padding: 9px 12px; border: 1px solid var(--input-border);
-            border-radius: 10px; background: var(--input-bg); color: var(--text-primary);
-            font-size: 13px; transition: 0.2s;
-        }
-        .modal-box input:focus, .modal-box select:focus {
-            border-color: var(--card-blue); outline: none;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
+        .modal-box label { display: block; font-weight: 600; font-size: 12px; margin-top: 12px; margin-bottom: 4px; }
+        .modal-box input, .modal-box select, .modal-box textarea { width: 100%; padding: 9px 12px; border: 1px solid var(--input-border); border-radius: 10px; background: var(--input-bg); color: var(--text-primary); font-size: 13px; transition: 0.2s; }
+        .modal-box input:focus, .modal-box select:focus { border-color: var(--card-blue); outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
         .modal-box .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         @media (max-width: 480px) { .modal-box .grid2 { grid-template-columns: 1fr; } }
         .modal-box .sep { margin: 16px 0 4px; border: none; border-top: 1px dashed var(--border-light); }
-        .modal-box .sep-title {
-            font-size: 11px; font-weight: 700; color: var(--card-purple);
-            text-transform: uppercase; letter-spacing: .5px; margin-top: 12px;
-        }
+        .modal-box .sep-title { font-size: 11px; font-weight: 700; color: var(--card-purple); text-transform: uppercase; letter-spacing: .5px; margin-top: 12px; }
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
-        .modal-actions .btn {
-            flex: 1; min-width: 110px; padding: 12px; border: none; border-radius: 40px;
-            font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.2s;
-        }
+        .modal-actions .btn { flex: 1; min-width: 110px; padding: 12px; border: none; border-radius: 40px; font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.2s; }
         .btn-save { background: var(--card-green); color: white; }
         .btn-save:hover { opacity: 0.85; }
         .btn-cancel { background: var(--bg-rec); color: var(--text-primary); border: 1px solid var(--border-light); }
@@ -505,90 +268,83 @@
         .modal-success { color: var(--card-green); font-size: 12px; margin-top: 10px; display: none; }
 
         /* ===== ROW 2COL / PANELS ===== */
-        .row-2col {
-            display: grid; grid-template-columns: 1fr 1.8fr; gap: 16px; margin-bottom: 16px;
-        }
+        .row-2col { display: grid; grid-template-columns: 1fr 1.8fr; gap: 16px; margin-bottom: 16px; }
         @media (max-width: 860px) { .row-2col { grid-template-columns: 1fr; } }
-        .panel {
-            background: var(--bg-card); border-radius: 14px; padding: 14px 16px 16px; box-shadow: var(--shadow);
-        }
+        .panel { background: var(--bg-card); border-radius: 14px; padding: 14px 16px 16px; box-shadow: var(--shadow); }
         .panel h3 { font-size: 13px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
         .panel h3 .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
         .table-wrap { overflow-x: auto; max-height: 260px; overflow-y: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 11px; }
-        th {
-            text-align: left; padding: 5px 4px 5px 0; font-weight: 600; color: var(--text-muted);
-            border-bottom: 1px solid var(--border-light); position: sticky; top: 0;
-            background: var(--bg-card);
-        }
+        th { text-align: left; padding: 5px 4px 5px 0; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--border-light); position: sticky; top: 0; background: var(--bg-card); }
         td { padding: 5px 4px 5px 0; border-bottom: 1px solid var(--border-light); }
         .chart-container { height: 140px; margin-top: 4px; }
 
-        .panel-proj {
-            background: var(--bg-card); border-radius: 14px; padding: 14px 16px 16px;
-            box-shadow: var(--shadow); margin-bottom: 16px;
-        }
+        .panel-proj { background: var(--bg-card); border-radius: 14px; padding: 14px 16px 16px; box-shadow: var(--shadow); margin-bottom: 16px; }
         .panel-proj .proj-grid { display: flex; flex-wrap: wrap; gap: 18px; font-size: 12px; }
-        .panel-proj .proj-grid .item strong {
-            display: block; font-size: 11px; color: var(--text-muted); font-weight: 500;
-        }
+        .panel-proj .proj-grid .item strong { display: block; font-size: 11px; color: var(--text-muted); font-weight: 500; }
         .panel-proj .proj-grid .item span { font-weight: 700; font-size: 15px; }
 
         /* ===== FORMULAIRES ===== */
         .forms-section { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
         @media (max-width: 860px) { .forms-section { grid-template-columns: 1fr; } }
-        .form-box {
-            background: var(--bg-card); padding: 14px 16px 16px; border-radius: 14px; box-shadow: var(--shadow);
-        }
+        .form-box { background: var(--bg-card); padding: 14px 16px 16px; border-radius: 14px; box-shadow: var(--shadow); }
         .form-box h3 { font-size: 13px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
         .form-box label { display: block; font-weight: 600; font-size: 11px; margin-top: 8px; margin-bottom: 3px; }
-        .form-box input, .form-box select {
-            width: 100%; padding: 7px 10px; border: 1px solid var(--input-border);
-            border-radius: 8px; background: var(--input-bg); color: var(--text-primary);
-            font-size: 12px; transition: 0.2s;
-        }
-        .form-box input:focus, .form-box select:focus {
-            border-color: var(--card-blue); outline: none;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
+        .form-box input, .form-box select { width: 100%; padding: 7px 10px; border: 1px solid var(--input-border); border-radius: 8px; background: var(--input-bg); color: var(--text-primary); font-size: 12px; transition: 0.2s; }
+        .form-box input:focus, .form-box select:focus { border-color: var(--card-blue); outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
         .form-box .form-row { display: flex; gap: 10px; }
         .form-box .form-row > * { flex: 1; }
-        .form-box .btn {
-            margin-top: 10px; padding: 8px 18px; border: none; border-radius: 40px;
-            font-weight: 600; font-size: 12px; cursor: pointer; transition: 0.2s;
-        }
+        .form-box .btn { margin-top: 10px; padding: 8px 18px; border: none; border-radius: 40px; font-weight: 600; font-size: 12px; cursor: pointer; transition: 0.2s; }
         .btn-primary { background: #1e293b; color: white; }
         body.dark .btn-primary { background: var(--card-blue); }
         .btn-primary:hover { transform: scale(1.02); }
         .btn-success { background: var(--card-green); color: white; }
         .btn-success:hover { opacity: 0.85; }
-        .btn-outline {
-            background: transparent; border: 1px solid var(--border-light); color: var(--text-primary);
-        }
+        .btn-outline { background: transparent; border: 1px solid var(--border-light); color: var(--text-primary); }
         .btn-danger { background: var(--card-red); color: white; }
         .btn-danger:hover { opacity: 0.85; }
-        .form-box textarea {
-            width: 100%; padding: 7px 10px; border: 1px solid var(--input-border);
-            border-radius: 8px; font-size: 11px; font-family: 'Courier New', monospace;
-            resize: vertical; min-height: 50px; background: var(--input-bg); color: var(--text-primary);
-        }
-        .form-box textarea:focus {
-            border-color: var(--card-blue); outline: none;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
+        .form-box textarea { width: 100%; padding: 7px 10px; border: 1px solid var(--input-border); border-radius: 8px; font-size: 11px; font-family: 'Courier New', monospace; resize: vertical; min-height: 50px; background: var(--input-bg); color: var(--text-primary); }
+        .form-box textarea:focus { border-color: var(--card-blue); outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
         .form-box .status-msg { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
 
-        /* ===== FOOTER ===== */
-        .footer-note {
-            margin-top: 14px; font-size: 10px; color: var(--text-muted); text-align: center;
-            border-top: 1px solid var(--border-light); padding-top: 12px; line-height: 1.7;
+        /* ===== IMPORT ÉQUIPE ===== */
+        .team-import-section {
+            background: var(--bg-card); border-radius: 14px; padding: 16px 18px 18px;
+            box-shadow: var(--shadow); margin-top: 16px; border-left: 4px solid var(--card-teal);
         }
+        .team-import-section h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+        .team-import-section .desc { font-size: 12px; color: var(--text-secondary); margin-bottom: 10px; line-height: 1.5; }
+        .team-import-section .desc strong { color: var(--card-teal); }
+        .team-import-section textarea {
+            width: 100%; min-height: 140px; padding: 10px 12px; border: 1px solid var(--input-border);
+            border-radius: 10px; background: var(--input-bg); color: var(--text-primary);
+            font-family: 'Courier New', monospace; font-size: 12px; resize: vertical;
+            transition: .2s;
+        }
+        .team-import-section textarea:focus { border-color: var(--card-teal); outline: none; box-shadow: 0 0 0 3px rgba(20,184,166,.2); }
+        .team-import-section .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+        .team-import-section .actions .btn {
+            padding: 9px 18px; border: none; border-radius: 40px; font-weight: 600;
+            font-size: 12px; cursor: pointer; transition: .2s;
+        }
+        .team-import-section .actions .btn-primary { background: var(--card-teal); color: #fff; }
+        .team-import-section .actions .btn-primary:hover { transform: scale(1.02); }
+        .team-import-section .status-msg {
+            font-size: 12px; margin-top: 10px; padding: 8px 12px; border-radius: 8px;
+            background: var(--bg-rec); color: var(--text-secondary); line-height: 1.6;
+        }
+        .team-import-section .status-msg.ok { color: var(--card-green); background: rgba(16,185,129,.08); }
+        .team-import-section .status-msg.err { color: var(--card-red); background: rgba(239,68,68,.08); }
+        .team-import-section .status-msg small { display: block; font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+        /* ===== FOOTER ===== */
+        .footer-note { margin-top: 14px; font-size: 10px; color: var(--text-muted); text-align: center; border-top: 1px solid var(--border-light); padding-top: 12px; line-height: 1.7; }
 
         @media print {
             .header .actions, .forms-section, .admin-panel, .btn-logout, .pb-right,
-            .planning-nav .nav-btn, .planning-nav .today-btn, .mode-bar { display: none !important; }
+            .planning-nav .nav-btn, .planning-nav .today-btn, .mode-bar,
+            .team-import-section { display: none !important; }
         }
-
         @media (max-width: 480px) {
             body { padding: 10px; }
             .header h1 { font-size: 18px; }
@@ -608,55 +364,35 @@
 <!-- ============================================================ -->
 <div id="loginScreen">
     <div class="login-box">
-        <!-- LOGIN -->
         <div id="loginForm">
             <h1>📞 Conciergerie</h1>
             <p>Connectez-vous avec vos identifiants</p>
-
             <label for="loginName">Nom</label>
             <input type="text" id="loginName" placeholder="Votre nom" />
-
             <label for="loginPrenom">Prénom <span style="font-weight:400;color:var(--text-muted)">(optionnel)</span></label>
             <input type="text" id="loginPrenom" placeholder="Votre prénom" />
-
             <label for="loginCode">Code secret (4 chiffres)</label>
             <input type="password" id="loginCode" placeholder="Code à 4 chiffres" maxlength="4" inputmode="numeric" />
-
             <button class="btn" onclick="login()">🔐 Se connecter</button>
-
-            <div class="auth-toggle">
-                Pas encore de compte ? <a onclick="showRegister()">Créer un compte</a>
-            </div>
-
+            <div class="auth-toggle">Pas encore de compte ? <a onclick="showRegister()">Créer un compte</a></div>
             <div id="loginError" class="login-error"></div>
             <div id="loginSuccess" class="login-success"></div>
-
             <div class="login-hint">
                 👑 Administrateur : <strong>Jimmy</strong> · code <strong>0000</strong><br>
                 <span style="opacity:.8">(laisser le champ Prénom vide)</span>
             </div>
         </div>
-
-        <!-- REGISTER -->
         <div id="registerForm" class="hidden">
             <h1>📝 Créer un compte</h1>
             <p>Inscrivez-vous pour accéder au tableau de bord</p>
-
             <label for="regName">Nom</label>
             <input type="text" id="regName" placeholder="Votre nom" />
-
             <label for="regPrenom">Prénom <span style="font-weight:400;color:var(--text-muted)">(optionnel)</span></label>
             <input type="text" id="regPrenom" placeholder="Votre prénom" />
-
             <label for="regCode">Code secret (4 chiffres)</label>
             <input type="password" id="regCode" placeholder="Code à 4 chiffres" maxlength="4" inputmode="numeric" />
-
             <button class="btn" onclick="register()">📝 S'inscrire</button>
-
-            <div class="auth-toggle">
-                Déjà un compte ? <a onclick="showLogin()">Se connecter</a>
-            </div>
-
+            <div class="auth-toggle">Déjà un compte ? <a onclick="showLogin()">Se connecter</a></div>
             <div id="regError" class="login-error"></div>
             <div id="regSuccess" class="login-success"></div>
         </div>
@@ -670,30 +406,21 @@
     <div class="modal-box">
         <h2>👤 Mon profil</h2>
         <p>Modifiez vos informations personnelles et vos paramètres</p>
-
         <label for="profileNom">Nom</label>
         <input type="text" id="profileNom" />
-
         <label for="profilePrenom">Prénom (optionnel)</label>
         <input type="text" id="profilePrenom" />
-
         <label for="profileCode">Code secret (4 chiffres)</label>
         <input type="password" id="profileCode" maxlength="4" inputmode="numeric" />
-
         <hr style="margin:16px 0;border:none;border-top:1px dashed var(--border-light);" />
-
         <label for="profileObjectif">🎯 Objectif mensuel (heures)</label>
         <input type="number" id="profileObjectif" min="1" max="999" />
-
         <label for="profileSalaire">💰 Salaire de base (Ar)</label>
         <input type="number" id="profileSalaire" min="0" step="1000" />
-
         <label for="profileBonus">💎 Bonus horaire (Ar/h)</label>
         <input type="number" id="profileBonus" min="0" step="500" />
-
         <div id="profileError" class="modal-error"></div>
         <div id="profileSuccess" class="modal-success"></div>
-
         <div class="modal-actions">
             <button class="btn btn-save" onclick="saveProfile()">💾 Enregistrer</button>
             <button class="btn btn-cancel" onclick="closeProfile()">❌ Fermer</button>
@@ -702,13 +429,12 @@
 </div>
 
 <!-- ============================================================ -->
-<!-- MODAL SHIFT / EMPLOI DU TEMPS -->
+<!-- MODAL SHIFT -->
 <!-- ============================================================ -->
 <div class="modal-overlay" id="shiftModal">
     <div class="modal-box">
         <h2>🗓️ Planifier mon shift</h2>
         <p id="shiftModalDate">—</p>
-
         <label for="shiftType">Type de journée</label>
         <select id="shiftType" onchange="majHeuresShift()">
             <option value="travail">💼 Travail</option>
@@ -716,55 +442,30 @@
             <option value="conge">🌴 Congé</option>
             <option value="absent">🚫 Absence</option>
         </select>
-
         <div class="grid2">
-            <div>
-                <label for="shiftDebut">Début du shift</label>
-                <input type="time" id="shiftDebut" step="60" oninput="majHeuresShift()" />
-            </div>
-            <div>
-                <label for="shiftFin">Fin du shift</label>
-                <input type="time" id="shiftFin" step="60" oninput="majHeuresShift()" />
-            </div>
+            <div><label for="shiftDebut">Début du shift</label><input type="time" id="shiftDebut" step="60" oninput="majHeuresShift()" /></div>
+            <div><label for="shiftFin">Fin du shift</label><input type="time" id="shiftFin" step="60" oninput="majHeuresShift()" /></div>
         </div>
-
         <div class="grid2">
-            <div>
-                <label for="shiftPause">Pause (min)</label>
-                <input type="number" id="shiftPause" value="0" min="0" max="240" step="5" oninput="majHeuresShift()" />
-            </div>
-            <div>
-                <label for="shiftHeures">Heures retenues</label>
-                <input type="number" id="shiftHeures" step="0.25" min="0" placeholder="0" />
-            </div>
+            <div><label for="shiftPause">Pause (min)</label><input type="number" id="shiftPause" value="0" min="0" max="240" step="5" oninput="majHeuresShift()" /></div>
+            <div><label for="shiftHeures">Heures retenues</label><input type="number" id="shiftHeures" step="0.25" min="0" placeholder="0" /></div>
         </div>
-
         <label for="shiftAppels">Nombre d'appels</label>
         <input type="number" id="shiftAppels" min="0" step="1" placeholder="0" />
-
         <div class="sep-title">📊 Cumul CRM (optionnel)</div>
         <div class="grid2">
-            <div>
-                <label for="shiftCrmDebut">Cumul CRM début</label>
-                <input type="text" id="shiftCrmDebut" placeholder="145:58:08" oninput="majHeuresShift()" />
-            </div>
-            <div>
-                <label for="shiftCrmFin">Cumul CRM actuel</label>
-                <input type="text" id="shiftCrmFin" placeholder="158:59:53" oninput="majHeuresShift()" />
-            </div>
+            <div><label for="shiftCrmDebut">Cumul CRM début</label><input type="text" id="shiftCrmDebut" placeholder="145:58:08" oninput="majHeuresShift()" /></div>
+            <div><label for="shiftCrmFin">Cumul CRM actuel</label><input type="text" id="shiftCrmFin" placeholder="158:59:53" oninput="majHeuresShift()" /></div>
         </div>
         <div id="shiftCrmResult" class="status-msg" style="font-size:11px;color:var(--card-green);margin-top:6px;"></div>
-
         <label for="shiftPresence">Présence</label>
         <select id="shiftPresence">
             <option value="">— Non renseigné —</option>
             <option value="true">✅ Présent</option>
             <option value="false">❌ Absent</option>
         </select>
-
         <label for="shiftNote">Note</label>
         <input type="text" id="shiftNote" placeholder="Optionnel" />
-
         <div class="modal-actions">
             <button class="btn btn-save" onclick="enregistrerShift()">💾 Enregistrer</button>
             <button class="btn btn-cancel" onclick="fermerShift()">Annuler</button>
@@ -781,7 +482,6 @@
 <div id="mainApp">
     <div class="container">
 
-        <!-- HEADER -->
         <div class="header">
             <div class="left">
                 <h1>📞 Conciergerie <span>par appel</span></h1>
@@ -800,10 +500,8 @@
             </div>
         </div>
 
-        <!-- ALERTE TMC -->
         <div id="alertBar" class="alert-bar"></div>
 
-        <!-- MODE DE CALCUL -->
         <div class="mode-bar">
             <span class="mode-label">📐 Base de calcul :</span>
             <div class="segmented">
@@ -813,7 +511,6 @@
             <span class="mode-hint" id="modeHint"></span>
         </div>
 
-        <!-- CARTES -->
         <div class="grid-cards">
             <div class="card blue"><div class="label">📞 Appels traités</div><div class="value" id="cTotal">0</div><div class="sub">ce mois</div></div>
             <div class="card blue"><div class="label">⏱️ Heures effectuées</div><div class="value" id="hTotal">0,0</div><div class="sub">sur <span id="objAffichage">90</span>h</div></div>
@@ -825,7 +522,6 @@
             <div class="card teal"><div class="label">⚡ Rythme actuel</div><div class="value" id="rythmeActuel">0,0</div><div class="sub">heures / jour</div></div>
         </div>
 
-        <!-- GAINS -->
         <div class="gains-box" id="gainsBox">
             <div class="gain-item"><span class="label">💰 Salaire de base (évolutif)</span><span class="value" id="gainBase">0 Ar</span></div>
             <div class="gain-item"><span class="label">⚡ Heures supplément</span><span class="value" id="gainSuppHeures">0,0 <small>h</small></span></div>
@@ -834,17 +530,13 @@
             <div class="badge-supp" id="badgeSupp">+0 Ar</div>
             <div class="gain-progress">
                 <div class="bar-bg"><div class="bar-fill" id="gainProgressFill" style="width:0%"></div></div>
-                <div style="display:flex;justify-content:space-between;font-size:10px;opacity:0.6;margin-top:3px;">
-                    <span>0 Ar</span><span id="gainProgressLabel">300 000 Ar</span>
-                </div>
+                <div style="display:flex;justify-content:space-between;font-size:10px;opacity:0.6;margin-top:3px;"><span>0 Ar</span><span id="gainProgressLabel">300 000 Ar</span></div>
             </div>
         </div>
 
-        <!-- ===== EMPLOI DU TEMPS ===== -->
+        <!-- EMPLOI DU TEMPS -->
         <div class="planning-section">
             <h3>🗓️ Emploi du temps &amp; Présence</h3>
-
-            <!-- Barre présence du jour -->
             <div class="presence-bar">
                 <div class="pb-left">
                     <span class="pb-date" id="presenceDate">Aujourd'hui</span>
@@ -857,22 +549,16 @@
                     <button class="pb-btn pb-shift-btn" onclick="ouvrirShiftAujourdhui()">🕐 Mon shift</button>
                 </div>
             </div>
-
-            <!-- Navigation semaine -->
             <div class="planning-nav">
                 <button class="nav-btn" onclick="changerSemaine(-1)">← Semaine précédente</button>
                 <span class="titre" id="planningTitre">—</span>
                 <button class="today-btn" onclick="changerSemaine(0)">📍 Aujourd'hui</button>
                 <button class="nav-btn" onclick="changerSemaine(1)">Semaine suivante →</button>
             </div>
-
-            <!-- Grille -->
             <div class="planning-week" id="planningGrid"></div>
-
             <div class="planning-resume" id="planningResume">—</div>
         </div>
 
-        <!-- RECOMMANDATIONS -->
         <div class="recommandations">
             <div class="top-row">
                 <h3>📋 Recommandations</h3>
@@ -884,26 +570,10 @@
                 </div>
             </div>
             <div class="rec-grid" id="recGrid">
-                <div class="rec-item" id="recAujourdhui">
-                    <div class="label">📅 Aujourd'hui</div>
-                    <div class="value" id="recAujourdhuiVal">-</div>
-                    <div class="sub" id="recAujourdhuiSub">Durée recommandée</div>
-                </div>
-                <div class="rec-item" id="recTMC">
-                    <div class="label">🎯 TMC cible</div>
-                    <div class="value" id="recTMCVal">-</div>
-                    <div class="sub" id="recTMCSub">15-30 min recommandé</div>
-                </div>
-                <div class="rec-item" id="recHebdo">
-                    <div class="label">📆 Cette semaine (7j)</div>
-                    <div class="value" id="recHebdoVal">-</div>
-                    <div class="sub" id="recHebdoSub">appels recommandés</div>
-                </div>
-                <div class="rec-item" id="recMensuel">
-                    <div class="label">📊 Fin de mois</div>
-                    <div class="value" id="recMensuelVal">-</div>
-                    <div class="sub" id="recMensuelSub">Jours restants</div>
-                </div>
+                <div class="rec-item" id="recAujourdhui"><div class="label">📅 Aujourd'hui</div><div class="value" id="recAujourdhuiVal">-</div><div class="sub" id="recAujourdhuiSub">Durée recommandée</div></div>
+                <div class="rec-item" id="recTMC"><div class="label">🎯 TMC cible</div><div class="value" id="recTMCVal">-</div><div class="sub" id="recTMCSub">15-30 min recommandé</div></div>
+                <div class="rec-item" id="recHebdo"><div class="label">📆 Cette semaine (7j)</div><div class="value" id="recHebdoVal">-</div><div class="sub" id="recHebdoSub">appels recommandés</div></div>
+                <div class="rec-item" id="recMensuel"><div class="label">📊 Fin de mois</div><div class="value" id="recMensuelVal">-</div><div class="sub" id="recMensuelSub">Jours restants</div></div>
             </div>
             <div style="margin-top:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
                 <span style="font-size:12px;">🏅 Performance :</span>
@@ -912,27 +582,18 @@
             </div>
         </div>
 
-        <!-- CLASSEMENT ÉQUIPE -->
         <div class="classement-section" id="classementSection">
             <h3>🏆 Classement d'équipe</h3>
             <div class="team-summary" id="teamSummary"></div>
             <div class="classement-grid">
-                <div class="classement-box">
-                    <h4>⏱️ Productivité (heures du mois)</h4>
-                    <div id="classementHeures"></div>
-                </div>
-                <div class="classement-box">
-                    <h4>🎯 Meilleur TMC</h4>
-                    <div id="classementTMC"></div>
-                </div>
+                <div class="classement-box"><h4>⏱️ Productivité (heures du mois)</h4><div id="classementHeures"></div></div>
+                <div class="classement-box"><h4>🎯 Meilleur TMC</h4><div id="classementTMC"></div></div>
             </div>
         </div>
 
-        <!-- ADMIN PANEL -->
         <div class="admin-panel" id="adminPanel">
             <h3>👑 Administration — Jimmy</h3>
             <div class="admin-grid" id="adminUserList"></div>
-
             <div class="admin-add">
                 <label style="font-weight:600;font-size:11px;display:block;margin-bottom:6px;">➕ Ajouter un agent</label>
                 <div class="row">
@@ -941,15 +602,11 @@
                     <input type="password" id="adminNewCode" placeholder="Code 4 chiffres" maxlength="4" inputmode="numeric" style="max-width:120px;" />
                     <button class="btn btn-success" onclick="ajouterAgent()" style="padding:7px 18px;font-size:12px;border:none;border-radius:40px;font-weight:600;cursor:pointer;">➕ Ajouter</button>
                 </div>
-                <label class="chk">
-                    <input type="checkbox" id="adminNewNonComptant" />
-                    🚫 Agent non comptant (exclu du classement d'équipe)
-                </label>
+                <label class="chk"><input type="checkbox" id="adminNewNonComptant" /> 🚫 Agent non comptant (exclu du classement d'équipe)</label>
             </div>
             <div class="admin-hint">🔑 Raccourci : Ctrl+Shift+A · Jimmy est le seul administrateur</div>
         </div>
 
-        <!-- PROJECTION -->
         <div class="panel-proj">
             <h3 style="font-size:14px;font-weight:600;margin-bottom:10px;">
                 <span class="dot" style="background:var(--card-orange);display:inline-block;width:7px;height:7px;border-radius:50%;"></span>
@@ -965,15 +622,12 @@
             </div>
         </div>
 
-        <!-- TABLEAU + GRAPHIQUES -->
         <div class="row-2col">
             <div class="panel">
                 <h3><span class="dot" style="background:var(--card-blue);"></span> Détail journalier</h3>
                 <div class="table-wrap">
                     <table id="detailTable">
-                        <thead>
-                            <tr><th>Date</th><th>Shift</th><th>Appels</th><th>Heures</th><th>TMC</th></tr>
-                        </thead>
+                        <thead><tr><th>Date</th><th>Shift</th><th>Appels</th><th>Heures</th><th>TMC</th></tr></thead>
                         <tbody id="detailBody"></tbody>
                     </table>
                 </div>
@@ -988,7 +642,6 @@
             </div>
         </div>
 
-        <!-- FORMULAIRES -->
         <div class="forms-section">
             <div class="form-box">
                 <h3>📝 Ajouter un appel (jour travaillé)</h3>
@@ -1006,7 +659,7 @@
             </div>
 
             <div class="form-box">
-                <h3>📄 Import / Export JSON</h3>
+                <h3>📄 Import / Export JSON (mon profil)</h3>
                 <label>Collez vos données JSON</label>
                 <textarea id="jsonInput" placeholder="Collez votre JSON ici..."></textarea>
                 <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">
@@ -1019,6 +672,33 @@
             </div>
         </div>
 
+        <!-- ============================================================ -->
+        <!-- IMPORT PERFORMANCES ÉQUIPE (NOUVEAU) -->
+        <!-- ============================================================ -->
+        <div class="team-import-section">
+            <h3>👥 Import performances équipe (JSON)</h3>
+            <div class="desc">
+                Collez un JSON contenant les performances des agents. <strong>Les agents inexistants seront créés automatiquement</strong> (avec un code aléatoire s'il n'est pas fourni) et validés. Les heures sont calculées en priorité depuis <code>crmDebut</code> / <code>crmActuel</code>, sinon depuis <code>heuresGenerees</code> ou <code>heures</code>.
+            </div>
+            <textarea id="jsonEquipeInput" placeholder='Exemple :
+{
+  "date": "2026-09-19",
+  "agents": [
+    { "nom": "Chloé", "code": "1111", "debutShift": "09:00",
+      "crmDebut": "145:58:08", "crmActuel": "158:59:53" },
+    { "nom": "Laura", "code": "2222", "heures": 8.85, "appels": 24 },
+    { "nom": "NouveauAgent", "heuresGenerees": "07:30:00", "appels": 20 }
+  ]
+}'></textarea>
+            <div class="actions">
+                <button class="btn btn-primary" onclick="importerPerfEquipe()">📥 Importer et créer les agents</button>
+                <button class="btn btn-success" onclick="remplirExempleEquipe()">📋 Exemple</button>
+                <button class="btn btn-outline" onclick="viderJSONEquipe()">🧹 Effacer</button>
+                <button class="btn btn-outline" onclick="exporterPerfEquipe()">💾 Exporter les perfs</button>
+            </div>
+            <div id="jsonEquipeStatus" class="status-msg">✅ Collez un JSON et cliquez sur "Importer".</div>
+        </div>
+
         <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
             <button class="btn btn-danger" onclick="archiverMois()" style="padding:8px 20px;border:none;border-radius:40px;font-weight:600;font-size:12px;cursor:pointer;">📦 Archiver le mois</button>
             <button class="btn btn-outline" onclick="exportPDF()" style="padding:8px 20px;border-radius:40px;font-weight:600;font-size:12px;cursor:pointer;">🖨️ Exporter en PDF</button>
@@ -1026,9 +706,9 @@
 
         <div class="footer-note">
             ⚡ Sauvegarde automatique · Synchronisation cloud · Ctrl+J = Exemple · Ctrl+U = Mise à jour · Ctrl+Shift+A = Admin · 🌙 Mode sombre<br>
-            🗓️ Cliquez sur un jour de l'emploi du temps pour planifier votre shift · ✅ Marquez votre présence quotidienne
+            🗓️ Cliquez sur un jour de l'emploi du temps pour planifier votre shift · ✅ Marquez votre présence quotidienne<br>
+            👥 Import équipe : crée automatiquement les agents manquants
         </div>
-
     </div>
 </div>
 
@@ -1058,7 +738,6 @@ let shiftDateEnCours = null;
 function isoDate(d) {
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 }
-
 function parseHeures(str) {
     if (str === null || str === undefined) return null;
     const s = String(str).trim();
@@ -1070,7 +749,6 @@ function parseHeures(str) {
     if (parts.length === 1) return parts[0];
     return null;
 }
-
 function formatHeures(h) {
     const total = Math.round((h || 0) * 3600);
     const hh = Math.floor(total / 3600);
@@ -1078,24 +756,20 @@ function formatHeures(h) {
     const ss = total % 60;
     return String(hh).padStart(2, '0') + ':' + String(mm).padStart(2, '0') + ':' + String(ss).padStart(2, '0');
 }
-
 function slug(s) {
     return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
 }
-
 function cleUtilisateur(nom, prenom) {
     const n = slug(nom);
     const p = slug(prenom);
     return p ? n + '_' + p : n;
 }
-
 function nomAffiche(u) {
     if (!u) return '?';
     const p = (u.prenom || '').trim();
     if (!p || p.toLowerCase() === 'agent' || p.toLowerCase() === 'admin') return u.nom || '?';
     return p + ' ' + (u.nom || '');
 }
-
 function lundiSemaine(offset) {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
@@ -1103,29 +777,24 @@ function lundiSemaine(offset) {
     d.setDate(d.getDate() - j + offset * 7);
     return d;
 }
-
 function formatDateFr(dateStr) {
     const d = new Date(dateStr + 'T00:00:00');
     if (isNaN(d.getTime())) return dateStr;
     return d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 }
-
 function aujourdhuiISO() { return isoDate(new Date()); }
 
 /* ============================================================
    4. INITIALISATION
    ============================================================ */
 document.addEventListener('DOMContentLoaded', function () {
-    chargerUsersCloud().then(() => {
-        // Prêt
-    });
+    chargerUsersCloud().then(() => {});
 
     const now = new Date();
     const dateEl = document.getElementById('inputDate');
     const heureEl = document.getElementById('inputHeure');
     if (dateEl) dateEl.value = isoDate(now);
     if (heureEl) heureEl.value = now.toTimeString().slice(0, 8);
-
     document.getElementById('presenceDate').textContent =
         now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
 
@@ -1150,7 +819,6 @@ function showLogin() {
         if (el) { el.style.display = 'none'; el.textContent = ''; }
     });
 }
-
 function showRegister() {
     document.getElementById('loginForm').classList.add('hidden');
     document.getElementById('registerForm').classList.remove('hidden');
@@ -1161,47 +829,31 @@ function showRegister() {
 }
 
 /* ============================================================
-   6. GESTION DES UTILISATEURS
+   6. UTILISATEURS
    ============================================================ */
 function utilisateursParDefaut() {
     const u = {
-        'jimmy': {
-            nom: 'Jimmy', prenom: '', code: '0000',
-            role: 'admin', valide: true, nonComptant: false
-        }
+        'jimmy': { nom: 'Jimmy', prenom: '', code: '0000', role: 'admin', valide: true, nonComptant: false }
     };
-    // Équipe de démonstration (issue du tableau fourni)
     const equipe = [
         ['Chloé', '1111'], ['Laura', '2222'], ['David', '3333'], ['Kevin', '4444'],
         ['Anthony', '5555'], ['Adèle', '6666'], ['Léo', '7777'], ['Zoé', '8888']
     ];
     equipe.forEach(([nom, code]) => {
-        u[slug(nom)] = {
-            nom: nom, prenom: '', code: code,
-            role: 'agent', valide: true, nonComptant: false
-        };
+        u[slug(nom)] = { nom: nom, prenom: '', code: code, role: 'agent', valide: true, nonComptant: false };
     });
     return u;
 }
-
 function assurerAdminJimmy() {
-    // Migration de l'ancien compte "admin" générique vers Jimmy
     if (allUsers['admin'] && !allUsers['jimmy']) {
         allUsers['jimmy'] = {
-            nom: 'Jimmy',
-            prenom: '',
-            code: allUsers['admin'].code || '0000',
-            role: 'admin',
-            valide: true,
-            nonComptant: false
+            nom: 'Jimmy', prenom: '', code: allUsers['admin'].code || '0000',
+            role: 'admin', valide: true, nonComptant: false
         };
         delete allUsers['admin'];
     }
     if (!allUsers['jimmy']) {
-        allUsers['jimmy'] = {
-            nom: 'Jimmy', prenom: '', code: '0000',
-            role: 'admin', valide: true, nonComptant: false
-        };
+        allUsers['jimmy'] = { nom: 'Jimmy', prenom: '', code: '0000', role: 'admin', valide: true, nonComptant: false };
     } else {
         allUsers['jimmy'].role = 'admin';
         allUsers['jimmy'].valide = true;
@@ -1209,7 +861,6 @@ function assurerAdminJimmy() {
     }
     if (allUsers['jimmy'].nonComptant === undefined) allUsers['jimmy'].nonComptant = false;
 }
-
 async function chargerUsersCloud() {
     try {
         const response = await fetch(API_URL, { headers: { 'X-Master-Key': JSONBIN_API_KEY } });
@@ -1223,9 +874,7 @@ async function chargerUsersCloud() {
                 return;
             }
         }
-    } catch (e) {
-        console.log('Erreur chargement users cloud:', e);
-    }
+    } catch (e) { console.log('Erreur chargement users cloud:', e); }
 
     try {
         const raw = localStorage.getItem('conciergerie_users');
@@ -1237,17 +886,13 @@ async function chargerUsersCloud() {
             sauvegarderUsersCloud();
             return;
         }
-    } catch (e) {
-        allUsers = utilisateursParDefaut();
-    }
+    } catch (e) { allUsers = utilisateursParDefaut(); }
     assurerAdminJimmy();
     sauvegarderUsersLocal();
 }
-
 function sauvegarderUsersLocal() {
     localStorage.setItem('conciergerie_users', JSON.stringify(allUsers));
 }
-
 async function sauvegarderUsersCloud() {
     try {
         const response = await fetch(API_URL, { headers: { 'X-Master-Key': JSONBIN_API_KEY } });
@@ -1263,15 +908,9 @@ async function sauvegarderUsersCloud() {
             body: JSON.stringify(payload)
         });
         if (!saveResponse.ok) console.error('Erreur sauvegarde users:', saveResponse.status);
-    } catch (e) {
-        console.error('Erreur sauvegarde users cloud:', e);
-    }
+    } catch (e) { console.error('Erreur sauvegarde users cloud:', e); }
 }
-
-function sauvegarderUsers() {
-    sauvegarderUsersLocal();
-    sauvegarderUsersCloud();
-}
+function sauvegarderUsers() { sauvegarderUsersLocal(); sauvegarderUsersCloud(); }
 
 /* ============================================================
    7. REGISTER / LOGIN / LOGOUT
@@ -1282,45 +921,36 @@ function register() {
     const code = document.getElementById('regCode').value.trim();
     const errorEl = document.getElementById('regError');
     const successEl = document.getElementById('regSuccess');
-
-    errorEl.style.display = 'none';
-    successEl.style.display = 'none';
+    errorEl.style.display = 'none'; successEl.style.display = 'none';
 
     if (!nom || !code || code.length !== 4 || !/^\d{4}$/.test(code)) {
         errorEl.textContent = '❌ Veuillez renseigner un nom et un code de 4 chiffres.';
         errorEl.style.display = 'block';
         return;
     }
-
     const key = cleUtilisateur(nom, prenom);
     if (allUsers[key]) {
         errorEl.textContent = '❌ Un compte avec ce nom existe déjà.';
         errorEl.style.display = 'block';
         return;
     }
-
-    for (const [k, u] of Object.entries(allUsers)) {
+    for (const u of Object.values(allUsers)) {
         if (u.code === code) {
-            errorEl.textContent = '❌ Ce code secret est déjà utilisé. Veuillez en choisir un autre.';
+            errorEl.textContent = '❌ Ce code secret est déjà utilisé.';
             errorEl.style.display = 'block';
             return;
         }
     }
-
     allUsers[key] = {
         nom: nom, prenom: prenom, code: code,
-        role: 'agent', valide: false, nonComptant: false,
-        demande: Date.now()
+        role: 'agent', valide: false, nonComptant: false, demande: Date.now()
     };
     sauvegarderUsers();
-
     successEl.textContent = '✅ Inscription réussie ! En attente de validation par Jimmy (admin).';
     successEl.style.display = 'block';
-
     document.getElementById('regName').value = '';
     document.getElementById('regPrenom').value = '';
     document.getElementById('regCode').value = '';
-
     setTimeout(showLogin, 3000);
 }
 
@@ -1330,56 +960,42 @@ function login() {
     const code = document.getElementById('loginCode').value.trim();
     const errorEl = document.getElementById('loginError');
     const successEl = document.getElementById('loginSuccess');
-
-    errorEl.style.display = 'none';
-    successEl.style.display = 'none';
+    errorEl.style.display = 'none'; successEl.style.display = 'none';
 
     if (!nom || !code) {
         errorEl.textContent = '❌ Veuillez renseigner votre nom et votre code.';
         errorEl.style.display = 'block';
         return;
     }
-
     let foundUser = null, foundKey = null;
     for (const [key, u] of Object.entries(allUsers)) {
         if ((u.nom || '').toLowerCase() === nom.toLowerCase() &&
             (u.prenom || '').toLowerCase() === prenom.toLowerCase() &&
             u.code === code) {
-            foundUser = u;
-            foundKey = key;
-            break;
+            foundUser = u; foundKey = key; break;
         }
     }
-
     if (!foundUser) {
         errorEl.textContent = '❌ Identifiants incorrects.';
         errorEl.style.display = 'block';
         return;
     }
-
     if (foundUser.valide === false) {
         errorEl.textContent = '❌ Compte en attente de validation par Jimmy (admin).';
         errorEl.style.display = 'block';
         return;
     }
-
     currentUser = foundKey;
     isAdmin = foundUser.role === 'admin';
-
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('mainApp').style.display = 'block';
-
     document.getElementById('userInfo').innerHTML =
         nomAffiche(foundUser) + ' <span class="badge" id="userRoleBadge">' +
         (isAdmin ? '👑 Admin' : 'Agent') + '</span>';
-
     document.getElementById('adminPanel').classList.remove('visible');
     if (isAdmin) chargerAdminPanel();
-
     chargerDonneesAvecSynchro(currentUser);
     chargerToutesDonnees().then(() => afficherClassement());
-
-    // Rafraîchissement de l'heure de présence
     document.getElementById('presenceDate').textContent =
         new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
 }
@@ -1405,19 +1021,17 @@ function chargerAdminPanel() {
     const container = document.getElementById('adminUserList');
     if (!container) return;
     container.innerHTML = '';
-
     for (const [key, u] of Object.entries(allUsers)) {
         const div = document.createElement('div');
         div.className = 'admin-user';
-
         const statusText = u.valide === false ? '⏳ En attente' : '✅ Validé';
         const roleText = u.role === 'admin' ? '👑 Admin' : 'Agent';
         const ncText = u.nonComptant ? ' · 🚫 Non comptant' : ' · ✅ Comptant';
-
+        const auto = u.autoCree ? ' · 🆕 auto' : '';
         div.innerHTML = `
             <div class="info">
                 <span class="name">${nomAffiche(u)}</span>
-                <span class="status">${statusText} · ${roleText}${ncText}</span>
+                <span class="status">${statusText} · ${roleText}${ncText}${auto}</span>
                 <span class="code-hint">🔑 ${u.code}</span>
             </div>
             <div class="actions">
@@ -1431,7 +1045,6 @@ function chargerAdminPanel() {
         container.appendChild(div);
     }
 }
-
 function validerAgent(key) {
     if (allUsers[key]) {
         allUsers[key].valide = true;
@@ -1440,7 +1053,6 @@ function validerAgent(key) {
         afficherClassement();
     }
 }
-
 function promouvoirAdmin(key) {
     if (allUsers[key] && confirm('Promouvoir ' + nomAffiche(allUsers[key]) + ' en admin ?')) {
         allUsers[key].role = 'admin';
@@ -1449,35 +1061,26 @@ function promouvoirAdmin(key) {
         chargerAdminPanel();
     }
 }
-
 function retrograderAgent(key) {
-    if (allUsers[key] && key !== 'jimmy' && confirm('Rétrograder ' + nomAffiche(allUsers[key]) + ' en agent ?')) {
+    if (allUsers[key] && key !== 'jimmy' && confirm('Rétrograder ' + nomAffiche(allUsers[key]) + ' ?')) {
         allUsers[key].role = 'agent';
         sauvegarderUsers();
         chargerAdminPanel();
     }
 }
-
 function ajouterAgent() {
     const nom = document.getElementById('adminNewName').value.trim();
     const prenom = document.getElementById('adminNewPrenom').value.trim();
     const code = document.getElementById('adminNewCode').value.trim();
     const nonComptant = document.getElementById('adminNewNonComptant').checked;
-
     if (!nom || !code || code.length !== 4 || !/^\d{4}$/.test(code)) {
-        alert('Veuillez renseigner un nom et un code de 4 chiffres.');
-        return;
+        alert('Veuillez renseigner un nom et un code de 4 chiffres.'); return;
     }
-
     const key = cleUtilisateur(nom, prenom);
-    if (allUsers[key]) {
-        alert('Cet utilisateur existe déjà.');
-        return;
-    }
+    if (allUsers[key]) { alert('Cet utilisateur existe déjà.'); return; }
     for (const u of Object.values(allUsers)) {
         if (u.code === code) { alert('Ce code est déjà utilisé.'); return; }
     }
-
     allUsers[key] = {
         nom: nom, prenom: prenom, code: code,
         role: 'agent', valide: true, nonComptant: nonComptant
@@ -1485,17 +1088,14 @@ function ajouterAgent() {
     sauvegarderUsers();
     chargerAdminPanel();
     afficherClassement();
-
     document.getElementById('adminNewName').value = '';
     document.getElementById('adminNewPrenom').value = '';
     document.getElementById('adminNewCode').value = '';
     document.getElementById('adminNewNonComptant').checked = false;
-
-    alert('✅ Agent ajouté' + (nonComptant ? ' (non comptant — exclu du classement)' : '') + '.');
+    alert('✅ Agent ajouté' + (nonComptant ? ' (non comptant)' : '') + '.');
 }
-
 function supprimerAgent(key) {
-    if (key === 'jimmy') { alert('Impossible de supprimer Jimmy (administrateur).'); return; }
+    if (key === 'jimmy') { alert('Impossible de supprimer Jimmy.'); return; }
     if (confirm('Supprimer ' + nomAffiche(allUsers[key]) + ' ?')) {
         delete allUsers[key];
         sauvegarderUsers();
@@ -1504,7 +1104,6 @@ function supprimerAgent(key) {
         try { localStorage.removeItem('conciergerie_data_' + key); } catch (e) {}
     }
 }
-
 function toggleNonComptant(key) {
     if (!allUsers[key] || key === 'jimmy') return;
     allUsers[key].nonComptant = !allUsers[key].nonComptant;
@@ -1512,7 +1111,6 @@ function toggleNonComptant(key) {
     chargerAdminPanel();
     afficherClassement();
 }
-
 function toggleAdminPanel() {
     if (!isAdmin) return;
     const panel = document.getElementById('adminPanel');
@@ -1527,11 +1125,9 @@ function openProfile() {
     if (!currentUser) return;
     const user = allUsers[currentUser];
     if (!user) return;
-
     document.getElementById('profileNom').value = user.nom || '';
     document.getElementById('profilePrenom').value = user.prenom || '';
     document.getElementById('profileCode').value = user.code || '';
-
     const data = allData[currentUser];
     if (data) {
         document.getElementById('profileObjectif').value = data.objectifMensuelHeures || 90;
@@ -1542,37 +1138,29 @@ function openProfile() {
         document.getElementById('profileSalaire').value = 300000;
         document.getElementById('profileBonus').value = 4000;
     }
-
     document.getElementById('profileError').style.display = 'none';
     document.getElementById('profileSuccess').style.display = 'none';
     document.getElementById('profileModal').classList.add('active');
 }
-
 function closeProfile() {
     document.getElementById('profileModal').classList.remove('active');
 }
-
 function saveProfile() {
     if (!currentUser) return;
-
     const nom = document.getElementById('profileNom').value.trim();
     const prenom = document.getElementById('profilePrenom').value.trim();
     const code = document.getElementById('profileCode').value.trim();
     const objectif = parseInt(document.getElementById('profileObjectif').value) || 90;
     const salaire = parseInt(document.getElementById('profileSalaire').value) || 300000;
     const bonus = parseInt(document.getElementById('profileBonus').value) || 4000;
-
     const errorEl = document.getElementById('profileError');
     const successEl = document.getElementById('profileSuccess');
-    errorEl.style.display = 'none';
-    successEl.style.display = 'none';
-
+    errorEl.style.display = 'none'; successEl.style.display = 'none';
     if (!nom || !code || code.length !== 4 || !/^\d{4}$/.test(code)) {
         errorEl.textContent = '❌ Nom et code de 4 chiffres requis.';
         errorEl.style.display = 'block';
         return;
     }
-
     for (const [key, u] of Object.entries(allUsers)) {
         if (key !== currentUser && u.code === code) {
             errorEl.textContent = '❌ Ce code secret est déjà utilisé.';
@@ -1580,17 +1168,11 @@ function saveProfile() {
             return;
         }
     }
-
-    // Le nom de Jimmy reste Jimmy
-    if (currentUser === 'jimmy') {
-        allUsers[currentUser].nom = 'Jimmy';
-    } else {
-        allUsers[currentUser].nom = nom;
-    }
+    if (currentUser === 'jimmy') allUsers[currentUser].nom = 'Jimmy';
+    else allUsers[currentUser].nom = nom;
     allUsers[currentUser].prenom = prenom;
     allUsers[currentUser].code = code;
     sauvegarderUsers();
-
     if (allData[currentUser]) {
         allData[currentUser].objectifMensuelHeures = objectif;
         allData[currentUser].salaireBaseAr = salaire;
@@ -1600,18 +1182,16 @@ function saveProfile() {
         synchroniserCloud(currentUser);
         afficherDashboard(currentUser);
     }
-
     const user = allUsers[currentUser];
     document.getElementById('userInfo').innerHTML =
         nomAffiche(user) + ' <span class="badge">' + (isAdmin ? '👑 Admin' : 'Agent') + '</span>';
-
-    successEl.textContent = '✅ Profil mis à jour avec succès !';
+    successEl.textContent = '✅ Profil mis à jour !';
     successEl.style.display = 'block';
     setTimeout(closeProfile, 1800);
 }
 
 /* ============================================================
-   10. CHARGEMENT / SYNCHRO DES DONNÉES
+   10. DONNÉES PAR DÉFAUT + CHARGEMENT
    ============================================================ */
 const DEMO_SHIFTS = {
     'chloe':   { debut: '09:00', crmDebut: '145:58:08', crmFin: '158:59:53' },
@@ -1635,7 +1215,6 @@ function creerDonneesParDefaut(userKey) {
         planning: {},
         _timestamp: Date.now()
     };
-
     const demo = DEMO_SHIFTS[userKey];
     if (demo) {
         const today = aujourdhuiISO();
@@ -1643,32 +1222,18 @@ function creerDonneesParDefaut(userKey) {
         const h2 = parseHeures(demo.crmFin);
         const heures = (h1 !== null && h2 !== null && h2 > h1) ? (h2 - h1) : 8;
         const appels = Math.max(1, Math.round(heures * 60 / 22));
-
         data.planning[today] = {
-            type: 'travail',
-            debut: demo.debut,
-            fin: '',
-            pause: 0,
-            heures: +heures.toFixed(3),
-            appels: appels,
-            crmDebut: demo.crmDebut,
-            crmFin: demo.crmFin,
-            presence: true,
-            note: 'Import initial (tableau CRM)',
-            maj: Date.now()
+            type: 'travail', debut: demo.debut, fin: '', pause: 0,
+            heures: +heures.toFixed(3), appels: appels,
+            crmDebut: demo.crmDebut, crmFin: demo.crmFin,
+            presence: true, note: 'Import initial (tableau CRM)', maj: Date.now()
         };
-
         data.jours.push({
-            date: today,
-            appels: appels,
-            heures: +heures.toFixed(3),
+            date: today, appels: appels, heures: +heures.toFixed(3),
             shift: { debut: demo.debut, fin: '' },
-            crmDebut: demo.crmDebut,
-            crmFin: demo.crmFin,
-            details: []
+            crmDebut: demo.crmDebut, crmFin: demo.crmFin, details: []
         });
     }
-
     return data;
 }
 
@@ -1699,9 +1264,7 @@ async function chargerDonneesAvecSynchro(userKey) {
                 }
             }
         }
-    } catch (e) {
-        setSyncStatus('red', 'Hors ligne');
-    }
+    } catch (e) { setSyncStatus('red', 'Hors ligne'); }
 
     if (data) {
         allData[userKey] = data;
@@ -1718,7 +1281,6 @@ async function chargerDonneesAvecSynchro(userKey) {
         afficherClassement();
         setSyncStatus('green', 'Nouveau profil');
     }
-
     try { await synchroniserCloud(userKey); } catch (e) {}
 }
 
@@ -1755,9 +1317,7 @@ async function chargerToutesDonnees() {
                 } catch (e) {}
             }
         }
-    } catch (e) {
-        console.error('Erreur chargement global:', e);
-    }
+    } catch (e) { console.error('Erreur chargement global:', e); }
 }
 
 function sauvegarderLocal(userKey) {
@@ -1765,20 +1325,17 @@ function sauvegarderLocal(userKey) {
         try { localStorage.setItem('conciergerie_data_' + userKey, JSON.stringify(allData[userKey])); } catch (e) {}
     }
 }
-
 function setSyncStatus(couleur, texte) {
     const dot = document.getElementById('syncDot');
     const label = document.getElementById('syncLabel');
     if (dot) dot.className = 'dot ' + couleur;
     if (label) label.textContent = texte;
 }
-
 async function synchroniserCloud(userKey) {
     if (!userKey) userKey = currentUser;
     if (!userKey) return;
     const data = allData[userKey];
     if (!data) return;
-
     try {
         const response = await fetch(API_URL, { headers: { 'X-Master-Key': JSONBIN_API_KEY } });
         let existing = {};
@@ -1793,11 +1350,8 @@ async function synchroniserCloud(userKey) {
             body: JSON.stringify(payload)
         });
         setSyncStatus('green', 'Synchronisé');
-    } catch (e) {
-        setSyncStatus('red', 'Hors ligne');
-    }
+    } catch (e) { setSyncStatus('red', 'Hors ligne'); }
 }
-
 async function synchroniser() {
     if (!currentUser) return;
     setSyncStatus('orange', 'Synchro...');
@@ -1807,13 +1361,11 @@ async function synchroniser() {
         await chargerToutesDonnees();
         afficherClassement();
         setSyncStatus('green', 'Synchronisé');
-    } catch (e) {
-        setSyncStatus('red', 'Hors ligne');
-    }
+    } catch (e) { setSyncStatus('red', 'Hors ligne'); }
 }
 
 /* ============================================================
-   11. MODE DE CALCUL
+   11. MODE CALCUL
    ============================================================ */
 function setModeCalcul(mode) {
     if (!currentUser) return;
@@ -1830,48 +1382,40 @@ function setModeCalcul(mode) {
    12. EMPLOI DU TEMPS
    ============================================================ */
 function changerSemaine(delta) {
-    if (delta === 0) { semaineOffset = 0; }
-    else { semaineOffset += delta; }
+    if (delta === 0) semaineOffset = 0;
+    else semaineOffset += delta;
     renderPlanning();
 }
-
 function renderPlanning() {
     if (!currentUser) return;
     const data = allData[currentUser];
     if (!data) return;
     if (!data.planning) data.planning = {};
-
     const lundi = lundiSemaine(semaineOffset);
     const dim = new Date(lundi);
     dim.setDate(dim.getDate() + 6);
-
     const fmt = { day: 'numeric', month: 'short' };
     const titre = document.getElementById('planningTitre');
     if (titre) {
         titre.textContent = 'Semaine du ' + lundi.toLocaleDateString('fr-FR', fmt) +
             ' au ' + dim.toLocaleDateString('fr-FR', fmt) + ' ' + dim.getFullYear();
     }
-
     const todayStr = aujourdhuiISO();
     const noms = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
     const grid = document.getElementById('planningGrid');
     if (!grid) return;
     grid.innerHTML = '';
-
     let hSemaine = 0, nbTravail = 0, nbPlanifies = 0;
-
     for (let i = 0; i < 7; i++) {
         const d = new Date(lundi);
         d.setDate(lundi.getDate() + i);
         const ds = isoDate(d);
         const p = data.planning[ds];
-
         const cell = document.createElement('div');
         cell.className = 'day-cell';
         if (ds === todayStr) cell.classList.add('today');
         if (ds < todayStr) cell.classList.add('past');
         if (i >= 5) cell.classList.add('weekend');
-
         let corps = '';
         if (p && p.type === 'travail') {
             hSemaine += p.heures || 0;
@@ -1881,22 +1425,14 @@ function renderPlanning() {
             corps = `<div class="shift-time">${p.debut || '--:--'} → ${p.fin || '--:--'}</div>
                      <div class="shift-hours">⏱️ ${heuresTxt} h${appelsTxt}</div>
                      <span class="tag travail">💼 Travail</span>`;
-        } else if (p && p.type === 'repos') {
-            corps = `<span class="tag repos">😴 Repos</span>`;
-        } else if (p && p.type === 'conge') {
-            corps = `<span class="tag conge">🌴 Congé</span>`;
-        } else if (p && p.type === 'absent') {
-            corps = `<span class="tag absent">🚫 Absence</span>`;
-        } else {
-            corps = `<div class="shift-empty">＋ Planifier</div>`;
-        }
-
+        } else if (p && p.type === 'repos') { corps = `<span class="tag repos">😴 Repos</span>`; }
+        else if (p && p.type === 'conge') { corps = `<span class="tag conge">🌴 Congé</span>`; }
+        else if (p && p.type === 'absent') { corps = `<span class="tag absent">🚫 Absence</span>`; }
+        else { corps = `<div class="shift-empty">＋ Planifier</div>`; }
         if (p) nbPlanifies++;
-
         let badgePresence = '';
         if (p && p.presence === true) badgePresence = '<span class="tag present">✅ Présent</span>';
         else if (p && p.presence === false) badgePresence = '<span class="tag absent">❌ Absent</span>';
-
         cell.innerHTML = `
             <div class="dc-head"><span class="dow">${noms[i].slice(0, 3)}</span><span class="dnum">${d.getDate()}</span></div>
             <div class="dc-body">${corps}</div>
@@ -1905,31 +1441,25 @@ function renderPlanning() {
         cell.onclick = (function (dateStr) { return function () { openShiftModal(dateStr); }; })(ds);
         grid.appendChild(cell);
     }
-
     const res = document.getElementById('planningResume');
     if (res) {
         res.innerHTML = `📊 <strong>${nbTravail}</strong> jour(s) de travail planifié(s) · ` +
             `<strong>${hSemaine.toFixed(1)} h</strong> prévues cette semaine · ` +
             `<strong>${nbPlanifies}/7</strong> jours renseignés`;
     }
-
     majBarrePresence();
 }
-
 function majBarrePresence() {
     if (!currentUser) return;
     const data = allData[currentUser];
     if (!data) return;
     const todayStr = aujourdhuiISO();
     const p = data.planning ? data.planning[todayStr] : null;
-
     const el = document.getElementById('presenceText');
     const btnP = document.getElementById('btnPresent');
     const btnA = document.getElementById('btnAbsent');
-
     if (btnP) btnP.classList.remove('active');
     if (btnA) btnA.classList.remove('active');
-
     if (p && p.presence === true) {
         if (el) el.innerHTML = '✅ Présence enregistrée : <strong>Présent</strong> aujourd\'hui';
         if (btnP) btnP.classList.add('active');
@@ -1939,7 +1469,6 @@ function majBarrePresence() {
     } else {
         if (el) el.innerHTML = '🕐 Présence non renseignée pour aujourd\'hui';
     }
-
     const info = document.getElementById('presenceShift');
     if (info) {
         if (p && p.type === 'travail') {
@@ -1953,13 +1482,11 @@ function majBarrePresence() {
         }
     }
 }
-
 function marquerPresence(valeur) {
     if (!currentUser) return;
     const data = allData[currentUser];
     if (!data) return;
     if (!data.planning) data.planning = {};
-
     const todayStr = aujourdhuiISO();
     if (!data.planning[todayStr]) {
         data.planning[todayStr] = { type: 'travail', debut: '', fin: '', heures: 0, appels: 0, presence: null, maj: Date.now() };
@@ -1967,16 +1494,12 @@ function marquerPresence(valeur) {
     data.planning[todayStr].presence = valeur;
     data.planning[todayStr].maj = Date.now();
     data._timestamp = Date.now();
-
     sauvegarderLocal(currentUser);
     renderPlanning();
     afficherDashboard(currentUser);
     synchroniserCloud(currentUser);
 }
-
-function ouvrirShiftAujourdhui() {
-    openShiftModal(aujourdhuiISO());
-}
+function ouvrirShiftAujourdhui() { openShiftModal(aujourdhuiISO()); }
 
 /* ============================================================
    13. MODAL SHIFT
@@ -1986,10 +1509,8 @@ function openShiftModal(dateStr) {
     const data = allData[currentUser];
     if (!data) return;
     if (!data.planning) data.planning = {};
-
     shiftDateEnCours = dateStr;
     const p = data.planning[dateStr] || {};
-
     document.getElementById('shiftModalDate').textContent = formatDateFr(dateStr);
     document.getElementById('shiftType').value = p.type || 'travail';
     document.getElementById('shiftDebut').value = p.debut || '';
@@ -2003,16 +1524,13 @@ function openShiftModal(dateStr) {
         p.presence === true ? 'true' : (p.presence === false ? 'false' : '');
     document.getElementById('shiftNote').value = p.note || '';
     document.getElementById('shiftCrmResult').textContent = '';
-
     document.getElementById('shiftModal').classList.add('active');
     majHeuresShift();
 }
-
 function fermerShift() {
     document.getElementById('shiftModal').classList.remove('active');
     shiftDateEnCours = null;
 }
-
 function majHeuresShift() {
     const type = document.getElementById('shiftType').value;
     const debut = document.getElementById('shiftDebut').value;
@@ -2022,18 +1540,10 @@ function majHeuresShift() {
     const crmF = document.getElementById('shiftCrmFin').value.trim();
     const resEl = document.getElementById('shiftCrmResult');
     const heuresEl = document.getElementById('shiftHeures');
-
     const actif = (type === 'travail');
     ['shiftDebut', 'shiftFin', 'shiftPause', 'shiftHeures', 'shiftAppels', 'shiftCrmDebut', 'shiftCrmFin']
         .forEach(id => { document.getElementById(id).disabled = !actif; });
-
-    if (!actif) {
-        heuresEl.value = 0;
-        resEl.textContent = '';
-        return;
-    }
-
-    // Priorité au cumul CRM
+    if (!actif) { heuresEl.value = 0; resEl.textContent = ''; return; }
     if (crmD && crmF) {
         const h1 = parseHeures(crmD);
         const h2 = parseHeures(crmF);
@@ -2048,14 +1558,12 @@ function majHeuresShift() {
             resEl.textContent = '⚠️ Le cumul actuel est inférieur au cumul début.';
         }
     }
-
-    // Sinon calcul depuis début/fin
     if (debut && fin) {
         const h1 = parseHeures(debut);
         const h2 = parseHeures(fin);
         if (h1 !== null && h2 !== null) {
             let diff = h2 - h1;
-            if (diff < 0) diff += 24; // shift de nuit
+            if (diff < 0) diff += 24;
             diff -= pause / 60;
             if (diff > 0) {
                 heuresEl.value = diff.toFixed(3);
@@ -2063,17 +1571,13 @@ function majHeuresShift() {
                 resEl.textContent = 'Calcul automatique : ' + formatHeures(diff);
             }
         }
-    } else {
-        resEl.textContent = '';
-    }
+    } else { resEl.textContent = ''; }
 }
-
 function enregistrerShift() {
     if (!currentUser || !shiftDateEnCours) return;
     const data = allData[currentUser];
     if (!data.planning) data.planning = {};
     if (!data.jours) data.jours = [];
-
     const type = document.getElementById('shiftType').value;
     const debut = document.getElementById('shiftDebut').value || '';
     const fin = document.getElementById('shiftFin').value || '';
@@ -2081,12 +1585,8 @@ function enregistrerShift() {
     const heuresBrutes = parseFloat(document.getElementById('shiftHeures').value) || 0;
     const appels = parseInt(document.getElementById('shiftAppels').value) || 0;
     const presenceVal = document.getElementById('shiftPresence').value;
-
     const entry = {
-        type: type,
-        debut: debut,
-        fin: fin,
-        pause: pause,
+        type: type, debut: debut, fin: fin, pause: pause,
         heures: type === 'travail' ? heuresBrutes : 0,
         appels: type === 'travail' ? appels : 0,
         crmDebut: document.getElementById('shiftCrmDebut').value.trim(),
@@ -2095,11 +1595,7 @@ function enregistrerShift() {
         note: document.getElementById('shiftNote').value.trim(),
         maj: Date.now()
     };
-
     data.planning[shiftDateEnCours] = entry;
-
-    // Synchronisation automatique vers les jours travaillés
-    // (uniquement pour les jours passés ou aujourd'hui)
     const todayStr = aujourdhuiISO();
     if (shiftDateEnCours <= todayStr && type === 'travail' && entry.heures > 0) {
         let jour = data.jours.find(j => j.date === shiftDateEnCours);
@@ -2114,7 +1610,6 @@ function enregistrerShift() {
         jour.crmDebut = entry.crmDebut;
         jour.crmFin = entry.crmFin;
     }
-
     data._timestamp = Date.now();
     sauvegarderLocal(currentUser);
     fermerShift();
@@ -2123,15 +1618,12 @@ function enregistrerShift() {
     afficherClassement();
     synchroniserCloud(currentUser);
 }
-
 function supprimerShift() {
     if (!currentUser || !shiftDateEnCours) return;
     if (!confirm('Supprimer le shift du ' + formatDateFr(shiftDateEnCours) + ' ?')) return;
-
     const data = allData[currentUser];
     delete data.planning[shiftDateEnCours];
     data._timestamp = Date.now();
-
     sauvegarderLocal(currentUser);
     fermerShift();
     renderPlanning();
@@ -2148,14 +1640,12 @@ function afficherDashboard(userKey) {
     const data = allData[userKey];
     if (!data) return;
     normaliserDonnees(data);
-
     const jours = data.jours;
     const objectif = data.objectifMensuelHeures || 90;
     const base = data.salaireBaseAr || 300000;
     const tauxSupp = data.tauxHoraireSupplementaireAr || 4000;
     const mode = data.modeCalcul || 'reel';
 
-    /* --- Mode de calcul --- */
     const segReel = document.getElementById('segReel');
     const segPlan = document.getElementById('segPlanifie');
     if (segReel) segReel.classList.toggle('active', mode === 'reel');
@@ -2166,7 +1656,6 @@ function afficherDashboard(userKey) {
             ? '→ calcul sur les heures réellement travaillées (appels/shifts passés).'
             : '→ calcul sur les heures travaillées + les shifts planifiés à venir.';
     }
-
     const objAff = document.getElementById('objAffichage');
     if (objAff) objAff.textContent = objectif;
     const objIn = document.getElementById('objInput');
@@ -2174,14 +1663,11 @@ function afficherDashboard(userKey) {
 
     const todayStr = aujourdhuiISO();
     const moisCourant = todayStr.slice(0, 7);
-
-    /* --- Jours travaillés du mois --- */
     const joursMois = jours.filter(j => (j.date || '').slice(0, 7) === moisCourant);
     const totalAppels = joursMois.reduce((s, j) => s + (j.appels || 0), 0);
     const totalHeures = joursMois.reduce((s, j) => s + (j.heures || 0), 0);
     const tmcActuel = totalAppels > 0 ? (totalHeures / totalAppels) * 60 : 0;
 
-    /* --- Planning du mois --- */
     let hPlanMois = 0, hPlanRestant = 0, jPlanMois = 0, jPlanRestants = 0;
     for (const [d, p] of Object.entries(data.planning || {})) {
         if (!p || p.type !== 'travail') continue;
@@ -2191,7 +1677,6 @@ function afficherDashboard(userKey) {
         if (d >= todayStr) { hPlanRestant += p.heures || 0; jPlanRestants++; }
     }
 
-    /* --- Calendrier --- */
     const now = new Date();
     const finMois = new Date(now.getFullYear(), now.getMonth() + 1, 0);
     const joursTotaux = finMois.getDate();
@@ -2199,7 +1684,6 @@ function afficherDashboard(userKey) {
     const joursRestants = Math.max(0, joursTotaux - joursEcoules);
     const rythmeActuel = joursEcoules > 0 ? totalHeures / joursEcoules : 0;
 
-    /* --- Projections --- */
     const projectionReelle = totalHeures + rythmeActuel * joursRestants;
     const projectionPlanifiee = totalHeures + hPlanRestant;
     const projection = mode === 'planifie' ? projectionPlanifiee : projectionReelle;
@@ -2209,23 +1693,19 @@ function afficherDashboard(userKey) {
     const hRestantes = Math.max(0, objectif - totalHeures);
     const rythmeNecessaire = joursRestants > 0 ? hRestantes / joursRestants : 0;
 
-    /* --- TMC 7 jours --- */
     const last7 = joursMois.slice(-7);
     const appels7 = last7.reduce((s, j) => s + (j.appels || 0), 0);
     const h7 = last7.reduce((s, j) => s + (j.heures || 0), 0);
     const tmc7 = appels7 > 0 ? (h7 / appels7) * 60 : 0;
-
     const prev7 = joursMois.slice(-14, -7);
     const appelsPrev7 = prev7.reduce((s, j) => s + (j.appels || 0), 0);
     const hPrev7 = prev7.reduce((s, j) => s + (j.heures || 0), 0);
     const tmcPrev7 = appelsPrev7 > 0 ? (hPrev7 / appelsPrev7) * 60 : 0;
-
     let tendance = '➡️ stable';
     if (tmcPrev7 > 0 && tmc7 > 0) {
         if (tmc7 > tmcPrev7 * 1.05) tendance = '⬆️ en hausse';
         else if (tmc7 < tmcPrev7 * 0.95) tendance = '⬇️ en baisse';
     }
-
     const tmcMin = 15, tmcMax = 30;
     let tmcStatus = '⏳ Pas de données';
     if (tmcActuel > 0) {
@@ -2233,14 +1713,11 @@ function afficherDashboard(userKey) {
         else if (tmcActuel < tmcMin) tmcStatus = '⚠️ Trop court';
         else tmcStatus = '⚠️ Trop long';
     }
-
-    /* --- Alerte --- */
     const alertBar = document.getElementById('alertBar');
     if (alertBar) {
         if (tmcActuel > 0 && (tmcActuel < tmcMin || tmcActuel > tmcMax)) {
             alertBar.className = 'alert-bar show orange';
-            alertBar.textContent = '⚠️ TMC de ' + Math.round(tmcActuel) +
-                ' min hors zone 15-30 min. Risque de licenciement si 3 mois successifs.';
+            alertBar.textContent = '⚠️ TMC de ' + Math.round(tmcActuel) + ' min hors zone 15-30 min. Risque de licenciement si 3 mois successifs.';
         } else if (tmcActuel > 0) {
             alertBar.className = 'alert-bar show green';
             alertBar.textContent = '✅ TMC de ' + Math.round(tmcActuel) + ' min dans la zone 15-30 min. Performance OK.';
@@ -2248,23 +1725,16 @@ function afficherDashboard(userKey) {
             alertBar.className = 'alert-bar';
         }
     }
-
-    /* --- Gains --- */
     const heuresSupp = Math.max(0, totalHeures - objectif);
     const gainSupp = heuresSupp * tauxSupp;
     const gainBase = Math.min(base, (totalHeures / objectif) * base);
     const gainTotal = gainBase + gainSupp;
-
-    /* --- Badge --- */
     let badge = '🌱 Débutant', badgeClass = 'debutant';
     if (totalHeures >= objectif * 1.2) { badge = '🏆 Expert'; badgeClass = 'expert'; }
     else if (totalHeures >= objectif * 0.9) { badge = '⭐ Pro'; badgeClass = 'pro'; }
     else if (totalHeures >= objectif * 0.5) { badge = '📈 Apprenti'; badgeClass = 'apprenti'; }
-
-    /* --- Mise à jour DOM --- */
     const hMois = document.getElementById('headerMois');
     if (hMois) hMois.textContent = now.toLocaleString('fr', { month: 'long', year: 'numeric' });
-
     document.getElementById('cTotal').textContent = totalAppels;
     document.getElementById('hTotal').textContent = totalHeures.toFixed(1);
     document.getElementById('hPlanifiees').textContent = hPlanMois.toFixed(1);
@@ -2279,7 +1749,6 @@ function afficherDashboard(userKey) {
     document.getElementById('progressFill').style.width = Math.min(100, taux) + '%';
     document.getElementById('joursRestants').textContent = joursRestants;
     document.getElementById('rythmeActuel').textContent = rythmeActuel.toFixed(1);
-
     document.getElementById('gainBase').textContent = Math.round(gainBase).toLocaleString() + ' Ar';
     document.getElementById('gainSuppHeures').textContent = heuresSupp.toFixed(1) + ' h';
     document.getElementById('gainSuppAr').textContent = Math.round(gainSupp).toLocaleString() + ' Ar';
@@ -2287,7 +1756,6 @@ function afficherDashboard(userKey) {
     document.getElementById('badgeSupp').textContent = '+' + Math.round(gainSupp).toLocaleString() + ' Ar';
     document.getElementById('gainProgressFill').style.width = Math.min(100, (gainBase / base) * 100) + '%';
     document.getElementById('gainProgressLabel').textContent = Math.round(base).toLocaleString() + ' Ar';
-
     document.getElementById('projRythme').textContent = rythmeActuel.toFixed(1) + ' h/j';
     document.getElementById('projFinMoisReel').textContent = projectionReelle.toFixed(1) + ' h';
     document.getElementById('projFinMoisPlan').textContent = projectionPlanifiee.toFixed(1) + ' h';
@@ -2299,48 +1767,38 @@ function afficherDashboard(userKey) {
     document.getElementById('projRythmeNecessaire').textContent = rythmeNecessaire.toFixed(1) + ' h/j';
     document.getElementById('tmcAlertText').textContent =
         'TMC : ' + Math.round(tmcActuel) + ' min · Zone : 15-30 min · Mode : ' + (mode === 'reel' ? 'Réel' : 'Planifié');
-
     const badgeEl = document.getElementById('badgePerf');
     badgeEl.textContent = badge;
     badgeEl.className = 'badge-perf ' + badgeClass;
 
-    /* --- Recommandations --- */
     let recDuree = Math.round(tmc7);
     if (recDuree > 30) recDuree = 30;
     if (recDuree < 15) recDuree = 15;
     if (recDuree === 0) recDuree = 20;
-
     const heuresRestantesAujourdhui = joursRestants > 0 ? hRestantes / joursRestants : 0;
     const minutesRestantes = heuresRestantesAujourdhui * 60;
     let recAppels = Math.ceil(minutesRestantes / recDuree);
     if (recAppels < 4) recAppels = 4;
-
     const semainesRestantes = Math.max(1, joursRestants / 7);
     const recHebdoHeures = hRestantes / semainesRestantes;
     const recHebdoAppels = recHebdoHeures > 0 ? Math.ceil(recHebdoHeures / (recDuree / 60)) : 0;
-
     const recAujourdhuiEl = document.getElementById('recAujourdhui');
     document.getElementById('recAujourdhuiVal').textContent = recAppels + ' appels';
     document.getElementById('recAujourdhuiSub').textContent = '~' + recDuree + ' min / appel';
     recAujourdhuiEl.className = 'rec-item ' + (totalHeures >= objectif ? 'ok' : (tmc7 < tmcMin ? 'urgent' : (tmc7 > tmcMax ? 'warning' : 'ok')));
-
     const recTMC = document.getElementById('recTMC');
     document.getElementById('recTMCVal').textContent = '15-30 min';
     document.getElementById('recTMCSub').textContent = 'TMC cible recommandé';
     recTMC.className = 'rec-item ' + (tmcActuel >= tmcMin && tmcActuel <= tmcMax ? 'ok' : 'warning');
-
     const recHebdoEl = document.getElementById('recHebdo');
     document.getElementById('recHebdoVal').textContent = recHebdoAppels + ' appels';
     document.getElementById('recHebdoSub').textContent = '~' + recHebdoHeures.toFixed(1) + ' h / semaine';
     recHebdoEl.className = 'rec-item ' + (totalHeures >= objectif ? 'ok' : 'warning');
-
     const recMensuelEl = document.getElementById('recMensuel');
-    document.getElementById('recMensuelVal').textContent =
-        hRestantes > 0 ? rythmeNecessaire.toFixed(1) + ' h/j' : '✅ OK';
+    document.getElementById('recMensuelVal').textContent = hRestantes > 0 ? rythmeNecessaire.toFixed(1) + ' h/j' : '✅ OK';
     document.getElementById('recMensuelSub').textContent = joursRestants + ' jours restants';
     recMensuelEl.className = 'rec-item ' + (totalHeures >= objectif ? 'ok' : (rythmeNecessaire > rythmeActuel ? 'urgent' : 'warning'));
 
-    /* --- Tableau détaillé --- */
     const tbody = document.getElementById('detailBody');
     tbody.innerHTML = '';
     if (joursMois.length === 0) {
@@ -2350,13 +1808,10 @@ function afficherDashboard(userKey) {
             const tr = document.createElement('tr');
             const tmc = j.appels > 0 ? (j.heures / j.appels * 60).toFixed(0) + ' min' : '—';
             const shift = (j.shift && j.shift.debut) ? (j.shift.debut + '→' + (j.shift.fin || '?')) : '—';
-            tr.innerHTML =
-                `<td>${j.date}</td><td>${shift}</td><td>${j.appels || 0}</td><td>${(j.heures || 0).toFixed(1)}</td><td>${tmc}</td>`;
+            tr.innerHTML = `<td>${j.date}</td><td>${shift}</td><td>${j.appels || 0}</td><td>${(j.heures || 0).toFixed(1)}</td><td>${tmc}</td>`;
             tbody.appendChild(tr);
         });
     }
-
-    /* --- Graphique heures --- */
     const labels = joursMois.map(j => j.date.slice(5));
     const dataHeures = joursMois.map(j => j.heures || 0);
     const ctx1 = document.getElementById('chartHeures').getContext('2d');
@@ -2364,30 +1819,12 @@ function afficherDashboard(userKey) {
     if (joursMois.length > 0) {
         chartInstance = new Chart(ctx1, {
             type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Heures / jour',
-                    data: dataHeures,
-                    backgroundColor: 'rgba(139, 92, 246, 0.5)',
-                    borderColor: '#8b5cf6',
-                    borderWidth: 2,
-                    borderRadius: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { beginAtZero: true, grid: { color: 'rgba(148,163,184,.15)' } },
-                    x: { grid: { display: false } }
-                }
-            }
+            data: { labels: labels, datasets: [{ label: 'Heures / jour', data: dataHeures,
+                backgroundColor: 'rgba(139, 92, 246, 0.5)', borderColor: '#8b5cf6', borderWidth: 2, borderRadius: 4 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, grid: { color: 'rgba(148,163,184,.15)' } }, x: { grid: { display: false } } } }
         });
     }
-
-    /* --- Graphique projection --- */
     const projData = [], projLabels = [];
     for (let i = 0; i < joursMois.length; i++) {
         const sub = joursMois.slice(0, i + 1);
@@ -2401,27 +1838,10 @@ function afficherDashboard(userKey) {
     if (projData.length > 1) {
         chartProjection = new Chart(ctx2, {
             type: 'line',
-            data: {
-                labels: projLabels,
-                datasets: [{
-                    label: 'Projection fin de mois',
-                    data: projData,
-                    borderColor: '#f59e0b',
-                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                    fill: true,
-                    tension: 0.25,
-                    pointRadius: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { beginAtZero: true, grid: { color: 'rgba(148,163,184,.15)' } },
-                    x: { grid: { display: false } }
-                }
-            }
+            data: { labels: projLabels, datasets: [{ label: 'Projection fin de mois', data: projData,
+                borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.1)', fill: true, tension: 0.25, pointRadius: 2 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, grid: { color: 'rgba(148,163,184,.15)' } }, x: { grid: { display: false } } } }
         });
     } else {
         ctx2.clearRect(0, 0, ctx2.canvas.width, ctx2.canvas.height);
@@ -2429,7 +1849,7 @@ function afficherDashboard(userKey) {
 }
 
 /* ============================================================
-   15. CLASSEMENT D'ÉQUIPE
+   15. CLASSEMENT
    ============================================================ */
 function afficherClassement() {
     const containerHeures = document.getElementById('classementHeures');
@@ -2437,38 +1857,23 @@ function afficherClassement() {
     if (!containerHeures || !containerTMC) return;
     containerHeures.innerHTML = '';
     containerTMC.innerHTML = '';
-
     const moisCourant = aujourdhuiISO().slice(0, 7);
     const classement = [];
     let totalEqHeures = 0, totalEqAppels = 0, nbComptants = 0, nbNonComptants = 0;
-
     for (const [key, u] of Object.entries(allUsers)) {
         if (u.valide === false) continue;
-
         const d = allData[key];
         const jj = (d && d.jours) ? d.jours.filter(j => (j.date || '').slice(0, 7) === moisCourant) : [];
         const appels = jj.reduce((s, j) => s + (j.appels || 0), 0);
         const heures = jj.reduce((s, j) => s + (j.heures || 0), 0);
         const tmc = appels > 0 ? (heures / appels) * 60 : 0;
-
-        if (u.nonComptant === true) { nbNonComptants++; continue; } // Exclu du classement
-
-        totalEqHeures += heures;
-        totalEqAppels += appels;
-        nbComptants++;
-
+        if (u.nonComptant === true) { nbNonComptants++; continue; }
+        totalEqHeures += heures; totalEqAppels += appels; nbComptants++;
         classement.push({
-            key: key,
-            nom: nomAffiche(u),
-            heures: heures,
-            tmc: tmc,
-            appels: appels,
-            isYou: key === currentUser,
-            admin: u.role === 'admin'
+            key: key, nom: nomAffiche(u), heures: heures, tmc: tmc, appels: appels,
+            isYou: key === currentUser, admin: u.role === 'admin'
         });
     }
-
-    // Résumé d'équipe
     const tmcEq = totalEqAppels > 0 ? (totalEqHeures / totalEqAppels) * 60 : 0;
     const summary = document.getElementById('teamSummary');
     if (summary) {
@@ -2480,33 +1885,24 @@ function afficherClassement() {
             ${nbNonComptants > 0 ? `<div class="ts-item" style="background:linear-gradient(135deg,#78350f,#92400e)"><span class="ts-label">🚫 Non comptants</span><span class="ts-value">${nbNonComptants}</span></div>` : ''}
         `;
     }
-
-    // Tri heures
     const sortedHeures = [...classement].sort((a, b) => b.heures - a.heures);
     sortedHeures.forEach((c, i) => {
         const div = document.createElement('div');
         div.className = 'rank-item' + (c.isYou ? ' you' : '');
         const medal = i === 0 ? '🥇' : (i === 1 ? '🥈' : (i === 2 ? '🥉' : (i + 1)));
-        div.innerHTML =
-            `<span class="rank">${medal}</span><span class="name">${c.nom}${c.admin ? ' 👑' : ''}${c.isYou ? ' 👈' : ''}</span><span class="value">${c.heures.toFixed(1)}h</span>`;
+        div.innerHTML = `<span class="rank">${medal}</span><span class="name">${c.nom}${c.admin ? ' 👑' : ''}${c.isYou ? ' 👈' : ''}</span><span class="value">${c.heures.toFixed(1)}h</span>`;
         containerHeures.appendChild(div);
     });
     if (sortedHeures.length === 0) {
         containerHeures.innerHTML = '<div style="color:var(--text-muted);font-size:12px;padding:6px;">Aucune donnée</div>';
     }
-
-    // Tri TMC (proche de 22,5 min = idéal)
-    const sortedTMC = [...classement]
-        .filter(c => c.tmc > 0)
-        .sort((a, b) => Math.abs(a.tmc - 22.5) - Math.abs(b.tmc - 22.5));
-
+    const sortedTMC = [...classement].filter(c => c.tmc > 0).sort((a, b) => Math.abs(a.tmc - 22.5) - Math.abs(b.tmc - 22.5));
     sortedTMC.forEach((c, i) => {
         const div = document.createElement('div');
         div.className = 'rank-item' + (c.isYou ? ' you' : '');
         const medal = i === 0 ? '🥇' : (i === 1 ? '🥈' : (i === 2 ? '🥉' : (i + 1)));
         const dansZone = (c.tmc >= 15 && c.tmc <= 30) ? ' ✅' : ' ⚠️';
-        div.innerHTML =
-            `<span class="rank">${medal}</span><span class="name">${c.nom}${c.isYou ? ' 👈' : ''}</span><span class="value">${c.tmc.toFixed(0)} min${dansZone}</span>`;
+        div.innerHTML = `<span class="rank">${medal}</span><span class="name">${c.nom}${c.isYou ? ' 👈' : ''}</span><span class="value">${c.tmc.toFixed(0)} min${dansZone}</span>`;
         containerTMC.appendChild(div);
     });
     if (sortedTMC.length === 0) {
@@ -2515,44 +1911,34 @@ function afficherClassement() {
 }
 
 /* ============================================================
-   16. AJOUT D'APPEL
+   16. AJOUT APPEL
    ============================================================ */
 function ajouterAppel() {
     if (!currentUser) return;
     const data = allData[currentUser];
     if (!data.jours) data.jours = [];
-
     const date = document.getElementById('inputDate').value;
     const heure = document.getElementById('inputHeure').value;
     const dureeStr = document.getElementById('inputDuree').value.trim();
     const nbAppels = parseInt(document.getElementById('inputNbAppels').value) || 1;
     const statusEl = document.getElementById('formStatus');
-
     if (!date || !dureeStr) {
         statusEl.textContent = '❌ Veuillez remplir la date et la durée.';
         statusEl.style.color = 'var(--card-red)';
         return;
     }
-
     let heures = 0;
     const parts = dureeStr.split(':');
-    if (parts.length === 3) {
-        heures = parseInt(parts[0]) + parseInt(parts[1]) / 60 + parseInt(parts[2]) / 3600;
-    } else if (parts.length === 2) {
-        heures = parseInt(parts[0]) + parseInt(parts[1]) / 60;
-    } else {
-        heures = parseFloat(dureeStr) / 60;
-    }
-
+    if (parts.length === 3) heures = parseInt(parts[0]) + parseInt(parts[1]) / 60 + parseInt(parts[2]) / 3600;
+    else if (parts.length === 2) heures = parseInt(parts[0]) + parseInt(parts[1]) / 60;
+    else heures = parseFloat(dureeStr) / 60;
     if (isNaN(heures) || heures <= 0) {
         statusEl.textContent = '❌ Durée invalide. Utilisez HH:MM:SS ou MM:SS.';
         statusEl.style.color = 'var(--card-red)';
         return;
     }
-
     const dureeMinutes = heures * 60;
     const dureeTotale = heures * nbAppels;
-
     let jour = data.jours.find(j => j.date === date);
     if (jour) {
         jour.appels = (jour.appels || 0) + nbAppels;
@@ -2569,21 +1955,17 @@ function ajouterAppel() {
         data.jours.push({ date: date, appels: nbAppels, heures: dureeTotale, details: details });
         data.jours.sort((a, b) => (a.date < b.date ? -1 : 1));
     }
-
     data._timestamp = Date.now();
     sauvegarderLocal(currentUser);
     afficherDashboard(currentUser);
     renderPlanning();
     afficherClassement();
     synchroniserCloud(currentUser);
-
     statusEl.textContent = '✅ ' + nbAppels + ' appel(s) ajouté(s) pour le ' + date + ' (' + dureeStr + ')';
     statusEl.style.color = 'var(--card-green)';
-
     document.getElementById('inputDuree').value = '';
     document.getElementById('inputNbAppels').value = '1';
 }
-
 function reinitialiserFormulaire() {
     const now = new Date();
     document.getElementById('inputDate').value = isoDate(now);
@@ -2595,13 +1977,12 @@ function reinitialiserFormulaire() {
 }
 
 /* ============================================================
-   17. JSON
+   17. JSON (profil perso)
    ============================================================ */
 function chargerJSON() {
     if (!currentUser) return;
     const raw = document.getElementById('jsonInput').value.trim();
     const statusEl = document.getElementById('jsonStatus');
-
     if (!raw) {
         statusEl.textContent = '⚠️ Veuillez coller un JSON valide.';
         statusEl.style.color = 'var(--card-orange)';
@@ -2619,16 +2000,13 @@ function chargerJSON() {
         if (!data.tauxHoraireSupplementaireAr) data.tauxHoraireSupplementaireAr = 4000;
         if (!data.planning) data.planning = {};
         if (!data.modeCalcul) data.modeCalcul = 'reel';
-
         data._timestamp = Date.now();
         allData[currentUser] = data;
-
         sauvegarderLocal(currentUser);
         afficherDashboard(currentUser);
         renderPlanning();
         afficherClassement();
         synchroniserCloud(currentUser);
-
         statusEl.textContent = '✅ Données chargées avec succès !';
         statusEl.style.color = 'var(--card-green)';
     } catch (e) {
@@ -2636,7 +2014,6 @@ function chargerJSON() {
         statusEl.style.color = 'var(--card-red)';
     }
 }
-
 function remplirExemple() {
     const now = new Date();
     const mois = isoDate(now).slice(0, 7);
@@ -2658,7 +2035,6 @@ function remplirExemple() {
     statusEl.textContent = '📋 Exemple chargé. Cliquez sur "Mettre à jour".';
     statusEl.style.color = 'var(--text-muted)';
 }
-
 function viderJSON() {
     if (confirm('Effacer le contenu JSON ?')) {
         document.getElementById('jsonInput').value = '';
@@ -2667,12 +2043,10 @@ function viderJSON() {
         statusEl.style.color = 'var(--text-muted)';
     }
 }
-
 function exporterJSON() {
     if (!currentUser) { alert('Aucun utilisateur connecté.'); return; }
     const data = allData[currentUser];
     if (!data) { alert('Aucune donnée à exporter.'); return; }
-
     const json = JSON.stringify(data, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -2681,20 +2055,390 @@ function exporterJSON() {
     a.download = 'conciergerie_' + currentUser + '_' + aujourdhuiISO() + '.json';
     a.click();
     URL.revokeObjectURL(url);
-
     const statusEl = document.getElementById('jsonStatus');
     statusEl.textContent = '💾 Exporté avec succès !';
     statusEl.style.color = 'var(--card-green)';
 }
 
 /* ============================================================
-   18. OBJECTIF / ARCHIVE
+   18. IMPORT PERFORMANCES ÉQUIPE (NOUVEAU)
+   ============================================================ */
+function genererCodeUnique() {
+    let code;
+    let tentatives = 0;
+    do {
+        code = String(Math.floor(1000 + Math.random() * 9000));
+        tentatives++;
+        if (tentatives > 500) break;
+    } while (Object.values(allUsers).some(u => u.code === code));
+    return code;
+}
+
+function trouverOuCreerUtilisateur(nom, prenom, codeFourni, nonComptant) {
+    const nomTrim = String(nom || '').trim();
+    const prenomTrim = String(prenom || '').trim();
+    if (!nomTrim) return { key: null, created: false };
+
+    // Recherche par nom + prénom exact
+    for (const [k, u] of Object.entries(allUsers)) {
+        if ((u.nom || '').toLowerCase() === nomTrim.toLowerCase() &&
+            (u.prenom || '').toLowerCase() === prenomTrim.toLowerCase()) {
+            return { key: k, created: false };
+        }
+    }
+
+    // Recherche par nom seul (si prénom vide des deux côtés)
+    if (!prenomTrim) {
+        for (const [k, u] of Object.entries(allUsers)) {
+            if ((u.nom || '').toLowerCase() === nomTrim.toLowerCase() &&
+                (!u.prenom || u.prenom.trim() === '')) {
+                return { key: k, created: false };
+            }
+        }
+    }
+
+    // Création automatique
+    let code = String(codeFourni || '').trim();
+    if (!/^\d{4}$/.test(code)) {
+        code = genererCodeUnique();
+    } else {
+        // Vérifier que le code n'est pas déjà pris
+        if (Object.values(allUsers).some(u => u.code === code)) {
+            code = genererCodeUnique();
+        }
+    }
+
+    let baseKey = cleUtilisateur(nomTrim, prenomTrim);
+    if (!baseKey) baseKey = slug(nomTrim) || 'agent';
+    let finalKey = baseKey;
+    let i = 1;
+    while (allUsers[finalKey]) {
+        finalKey = baseKey + '_' + i;
+        i++;
+    }
+
+    allUsers[finalKey] = {
+        nom: nomTrim,
+        prenom: prenomTrim,
+        code: code,
+        role: 'agent',
+        valide: true,
+        nonComptant: nonComptant === true,
+        autoCree: true,
+        dateCreation: Date.now()
+    };
+
+    return { key: finalKey, created: true, code: code };
+}
+
+function extraireHeuresAgent(agent) {
+    // Priorité 1 : crmDebut + crmActuel / crmFin
+    const crmD = String(agent.crmDebut || '').trim();
+    const crmF = String(agent.crmActuel || agent.crmFin || '').trim();
+    if (crmD && crmF) {
+        const h1 = parseHeures(crmD);
+        const h2 = parseHeures(crmF);
+        if (h1 !== null && h2 !== null && h2 >= h1) {
+            return { heures: h2 - h1, source: 'crm' };
+        }
+    }
+    // Priorité 2 : heuresGenerees
+    const hg = String(agent.heuresGenerees || '').trim();
+    if (hg) {
+        const h = parseHeures(hg);
+        if (h !== null && h > 0) return { heures: h, source: 'heuresGenerees' };
+    }
+    // Priorité 3 : heures
+    if (agent.heures !== undefined && agent.heures !== null) {
+        const h = parseFloat(String(agent.heures).replace(',', '.'));
+        if (!isNaN(h) && h > 0) return { heures: h, source: 'heures' };
+    }
+    // Priorité 4 : durée shift
+    if (agent.debutShift && agent.finShift) {
+        const h1 = parseHeures(agent.debutShift);
+        const h2 = parseHeures(agent.finShift);
+        if (h1 !== null && h2 !== null && h2 >= h1) return { heures: h2 - h1, source: 'shift' };
+    }
+    return { heures: 0, source: 'aucune' };
+}
+
+async function importerPerfEquipe() {
+    if (!currentUser) {
+        alert('Aucun utilisateur connecté.');
+        return;
+    }
+
+    const raw = document.getElementById('jsonEquipeInput').value.trim();
+    const statusEl = document.getElementById('jsonEquipeStatus');
+
+    if (!raw) {
+        statusEl.textContent = '⚠️ Veuillez coller un JSON.';
+        statusEl.className = 'status-msg err';
+        return;
+    }
+
+    let data;
+    try {
+        data = JSON.parse(raw);
+    } catch (e) {
+        statusEl.textContent = '❌ Erreur JSON : ' + e.message;
+        statusEl.className = 'status-msg err';
+        return;
+    }
+
+    // Support de plusieurs formats
+    let agents = null;
+    let dateImport = aujourdhuiISO();
+
+    if (Array.isArray(data)) {
+        agents = data;
+    } else if (data && Array.isArray(data.agents)) {
+        agents = data.agents;
+        if (data.date && /^\d{4}-\d{2}-\d{2}$/.test(data.date)) dateImport = data.date;
+    } else if (data && Array.isArray(data.equipe)) {
+        agents = data.equipe;
+        if (data.date && /^\d{4}-\d{2}-\d{2}$/.test(data.date)) dateImport = data.date;
+    } else {
+        statusEl.textContent = '❌ Format invalide. Utilisez {"agents": [...]} ou un tableau direct.';
+        statusEl.className = 'status-msg err';
+        return;
+    }
+
+    if (!agents || agents.length === 0) {
+        statusEl.textContent = '⚠️ Aucun agent dans le JSON.';
+        statusEl.className = 'status-msg err';
+        return;
+    }
+
+    let created = 0, updated = 0, errors = 0;
+    const log = [];
+
+    for (const a of agents) {
+        try {
+            if (!a || !a.nom) { errors++; continue; }
+
+            // 1. Trouver ou créer l'utilisateur
+            const res = trouverOuCreerUtilisateur(
+                a.nom, a.prenom || '', a.code, a.nonComptant
+            );
+            if (!res.key) { errors++; continue; }
+            const userKey = res.key;
+
+            if (res.created) {
+                created++;
+                log.push('➕ <strong>' + a.nom + (a.prenom ? ' ' + a.prenom : '') +
+                    '</strong> créé (code ' + res.code + ')');
+            } else {
+                updated++;
+            }
+
+            // 2. S'assurer que allData existe
+            if (!allData[userKey]) {
+                allData[userKey] = creerDonneesParDefaut(userKey);
+                // Neutraliser les données démo si l'agent est nouveau
+                if (res.created) {
+                    allData[userKey].jours = [];
+                    allData[userKey].planning = {};
+                }
+            }
+            const ud = allData[userKey];
+            if (!ud.jours) ud.jours = [];
+            if (!ud.planning) ud.planning = {};
+
+            // 3. Calculer les heures
+            const { heures, source } = extraireHeuresAgent(a);
+            const crmD = String(a.crmDebut || '').trim();
+            const crmF = String(a.crmActuel || a.crmFin || '').trim();
+
+            // 4. Appels
+            let appels = parseInt(a.appels);
+            if (isNaN(appels) || appels <= 0) {
+                // Estimation depuis TMC moyen de 22 min
+                appels = heures > 0 ? Math.max(1, Math.round(heures * 60 / 22)) : 0;
+            }
+
+            // 5. Mettre à jour / créer le jour
+            let jour = ud.jours.find(j => j.date === dateImport);
+            if (jour) {
+                jour.heures = (jour.heures || 0) + heures;
+                jour.appels = (jour.appels || 0) + appels;
+                if (crmD) jour.crmDebut = crmD;
+                if (crmF) jour.crmFin = crmF;
+            } else {
+                ud.jours.push({
+                    date: dateImport,
+                    appels: appels,
+                    heures: heures,
+                    shift: { debut: a.debutShift || '', fin: a.finShift || '' },
+                    crmDebut: crmD,
+                    crmFin: crmF,
+                    details: []
+                });
+                ud.jours.sort((x, y) => (x.date < y.date ? -1 : 1));
+            }
+
+            // 6. Mettre à jour le planning
+            const existPlan = ud.planning[dateImport] || {};
+            ud.planning[dateImport] = {
+                ...existPlan,
+                type: 'travail',
+                debut: a.debutShift || existPlan.debut || '',
+                fin: a.finShift || existPlan.fin || '',
+                heures: heures,
+                appels: appels,
+                crmDebut: crmD || existPlan.crmDebut || '',
+                crmFin: crmF || existPlan.crmFin || '',
+                presence: true,
+                note: existPlan.note || 'Import équipe',
+                maj: Date.now()
+            };
+
+            ud._timestamp = Date.now();
+            sauvegarderLocal(userKey);
+            await synchroniserCloud(userKey);
+
+            if (!res.created) {
+                log.push('🔄 <strong>' + a.nom + '</strong> : ' + heures.toFixed(2) + ' h · ' +
+                    appels + ' app. <small style="color:var(--text-muted)">(' + source + ')</small>');
+            }
+        } catch (err) {
+            console.error('Erreur agent:', err);
+            errors++;
+        }
+    }
+
+    // Sauvegarder les utilisateurs
+    sauvegarderUsers();
+
+    // Rafraîchir l'affichage
+    if (allData[currentUser]) {
+        afficherDashboard(currentUser);
+        renderPlanning();
+    }
+    afficherClassement();
+
+    let html = '✅ <strong>Import terminé</strong> — ';
+    html += created + ' créé(s), ' + updated + ' mis à jour';
+    if (errors > 0) html += ', ' + errors + ' erreur(s)';
+    html += '.<br><small>' + log.join('<br>') + '</small>';
+    statusEl.innerHTML = html;
+    statusEl.className = 'status-msg ok';
+
+    // Effacer le textarea si l'option est cochée par défaut
+    // (on garde le contenu pour réutilisation)
+}
+
+function remplirExempleEquipe() {
+    const today = aujourdhuiISO();
+    const ex = `{
+  "date": "${today}",
+  "agents": [
+    {
+      "nom": "Chloé",
+      "code": "1111",
+      "debutShift": "09:00",
+      "crmDebut": "145:58:08",
+      "crmActuel": "158:59:53"
+    },
+    {
+      "nom": "Laura",
+      "code": "2222",
+      "debutShift": "10:00",
+      "crmDebut": "127:22:56",
+      "crmActuel": "136:13:56"
+    },
+    {
+      "nom": "David",
+      "debutShift": "09:00",
+      "heures": 9.4,
+      "appels": 25
+    },
+    {
+      "nom": "NouveauAgent",
+      "heuresGenerees": "07:30:00",
+      "appels": 20
+    }
+  ]
+}`;
+    document.getElementById('jsonEquipeInput').value = ex;
+    const statusEl = document.getElementById('jsonEquipeStatus');
+    statusEl.innerHTML = '📋 Exemple chargé. Cliquez sur "Importer et créer les agents".<br>' +
+        '<small>Les agents déjà existants (Chloé, Laura, David) seront mis à jour. ' +
+        'NouveauAgent sera créé automatiquement avec un code aléatoire.</small>';
+    statusEl.className = 'status-msg';
+}
+
+function viderJSONEquipe() {
+    if (confirm('Effacer le contenu JSON équipe ?')) {
+        document.getElementById('jsonEquipeInput').value = '';
+        const statusEl = document.getElementById('jsonEquipeStatus');
+        statusEl.textContent = '🧹 Contenu effacé.';
+        statusEl.className = 'status-msg';
+    }
+}
+
+function exporterPerfEquipe() {
+    // Exporte les performances du mois de tous les agents (comptants et non comptants)
+    const moisCourant = aujourdhuiISO().slice(0, 7);
+    const agents = [];
+
+    for (const [key, u] of Object.entries(allUsers)) {
+        const d = allData[key];
+        const jj = (d && d.jours) ? d.jours.filter(j => (j.date || '').slice(0, 7) === moisCourant) : [];
+        const appels = jj.reduce((s, j) => s + (j.appels || 0), 0);
+        const heures = jj.reduce((s, j) => s + (j.heures || 0), 0);
+        const tmc = appels > 0 ? (heures / appels) * 60 : 0;
+
+        // Récupérer le dernier CRM connu
+        let crmDebut = '', crmActuel = '';
+        for (let i = jj.length - 1; i >= 0; i--) {
+            if (jj[i].crmDebut) { crmDebut = jj[i].crmDebut; break; }
+        }
+        for (let i = jj.length - 1; i >= 0; i--) {
+            if (jj[i].crmFin) { crmActuel = jj[i].crmFin; break; }
+        }
+
+        agents.push({
+            nom: u.nom,
+            prenom: u.prenom || '',
+            code: u.code,
+            role: u.role,
+            nonComptant: u.nonComptant === true,
+            heures: +heures.toFixed(2),
+            appels: appels,
+            tmc: +tmc.toFixed(1),
+            crmDebut: crmDebut,
+            crmActuel: crmActuel
+        });
+    }
+
+    const exportData = {
+        date: aujourdhuiISO(),
+        mois: moisCourant,
+        agents: agents
+    };
+
+    const json = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'perf_equipe_' + moisCourant + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+
+    const statusEl = document.getElementById('jsonEquipeStatus');
+    statusEl.textContent = '💾 Exporté : perf_equipe_' + moisCourant + '.json (' + agents.length + ' agents)';
+    statusEl.className = 'status-msg ok';
+}
+
+/* ============================================================
+   19. OBJECTIF / ARCHIVE
    ============================================================ */
 function appliquerObjectif() {
     if (!currentUser) return;
     const val = parseInt(document.getElementById('objInput').value);
     if (isNaN(val) || val < 1) { alert('Veuillez entrer un nombre valide.'); return; }
-
     const data = allData[currentUser];
     if (data) {
         data.objectifMensuelHeures = val;
@@ -2704,17 +2448,13 @@ function appliquerObjectif() {
         synchroniserCloud(currentUser);
     }
 }
-
 function archiverMois() {
     if (!currentUser) return;
     if (!confirm('Archiver les données du mois en cours et recommencer à zéro ?\n(L\'emploi du temps et les shifts restent intacts)')) return;
-
     const data = allData[currentUser];
     if (!data) return;
-
     const archiveKey = 'conciergerie_archive_' + currentUser + '_' + aujourdhuiISO().slice(0, 7);
     try { localStorage.setItem(archiveKey, JSON.stringify(data)); } catch (e) {}
-
     data.jours = [];
     data._timestamp = Date.now();
     sauvegarderLocal(currentUser);
@@ -2725,26 +2465,22 @@ function archiverMois() {
 }
 
 /* ============================================================
-   19. DARK MODE / PDF
+   20. DARK MODE / PDF
    ============================================================ */
 function toggleDarkMode() {
     document.body.classList.toggle('dark');
     const btn = document.querySelector('.btn-icon[title="Mode sombre"]');
     if (btn) btn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
 }
-
 function exportPDF() { window.print(); }
 
 /* ============================================================
-   20. SYNCHRONISATION AUTO
+   21. SYNCHRONISATION AUTO
    ============================================================ */
 setInterval(function () {
     if (currentUser && allData[currentUser]) synchroniserCloud(currentUser);
 }, 45000);
 
-/* ============================================================
-   21. RAFRAÎCHISSEMENT QUOTIDIEN (changement de jour)
-   ============================================================ */
 let dernierJourConnu = aujourdhuiISO();
 setInterval(function () {
     const j = aujourdhuiISO();
